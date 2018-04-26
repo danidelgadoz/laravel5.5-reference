@@ -97,6 +97,7 @@ class ClienteController extends Controller
     public function update(Request $request, Cliente $cliente)
     {
         $cliente->culqui_id = $request->culqui_id;
+        $cliente->culqui_card_id = $request->culqui_card_id;
         $cliente->save();
         return response($cliente, 200);
     }
