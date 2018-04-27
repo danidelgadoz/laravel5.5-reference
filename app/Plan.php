@@ -14,4 +14,9 @@ class Plan extends Model
     public $timestamps = true;
     protected $dates = ['deleted_at'];
     protected $guarded = ['id',"deleted_at","created_at","updated_at"];
+
+    public function cupon()
+    {
+        return $this->hasMany('App\Cupon', 'plan_id', 'id');
+    }
 }
