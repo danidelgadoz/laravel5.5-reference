@@ -20,3 +20,4 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::apiResource('plan', 'PlanController');
 Route::apiResource('cliente', 'ClienteController');
 Route::apiResource('cupon', 'CuponController');
+Route::apiResource('factura', 'FacturaController');
