@@ -1,6 +1,6 @@
 DEPLOYMENT AT UBUNTU CLIENT:
     - sudo chmod -R 777 var/www/html/project-name (just do it on local)
-    - sudo gedit /etc/apache2/sites-available/work.com.conf
+    - sudo gedit /etc/apache2/sites-available/laravel.com.conf
         <VirtualHost *:80>
             ServerAdmin webmaster@localhost
             ServerName laravel-reference.com
@@ -20,6 +20,33 @@ DEPLOYMENT AT UBUNTU CLIENT:
     - sudo service apache2 reload
 
 DEPLOYMENT AT UBUNTU SERVER:
+    - cd /etc/apache2/sites-available/
+    - cp 000-default.conf laravel.com.conf
+    - nano laravel.com.conf
+        <VirtualHost *:80>
+                ServerAdmin webmaster@localhost
+                DocumentRoot /var/www/html/laravel5.5-reference/public
+
+                <Directory /var/www/html/laravel5.5-reference/public/>
+                    Options Indexes FollowSymLinks
+                    AllowOverride All
+                    Require all granted
+                </Directory>
+
+                ErrorLog ${APACHE_LOG_DIR}/error.log
+                CustomLog ${APACHE_LOG_DIR}/access.log combined
+
+                <IfModule mod_dir.c>
+                    DirectoryIndex index.php index.pl index.cgi index.html index.xhtml index.htm
+                </IfModule>
+
+        </VirtualHost>
+
+    - a2dissite 000-default.conf
+    - a2ensite laravel.com.conf
+    - a2enmod rewrite
+    - service apache2 reload
+
     - sudo chgrp -R www-data storage bootstrap/cache
     - sudo chmod -R ug+rwx storage bootstrap/cache
 
