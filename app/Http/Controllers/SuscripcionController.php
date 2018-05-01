@@ -95,7 +95,11 @@ class SuscripcionController extends Controller
         $suscripcion->cliente_id = $cliente->id;
         $suscripcion->save();
 
-        return response($suscripcion, 201);
+        return response([
+            'carftime_id'=> $suscripcion->id,
+            'culqui_id'=> $suscripcion->culqui_suscription_id,
+            'message' => "Registro de cargo de suscripción exitoso"
+        ], 200);
     }
 
     /**
