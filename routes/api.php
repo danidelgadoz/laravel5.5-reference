@@ -21,3 +21,4 @@ Route::apiResource('plan', 'PlanController');
 Route::apiResource('cliente', 'ClienteController');
 Route::apiResource('cupon', 'CuponController');
 Route::apiResource('factura', 'FacturaController');
+Route::apiResource('suscripcion', 'SuscripcionController');
