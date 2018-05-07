@@ -23,11 +23,12 @@ DEPLOYMENT AT UBUNTU SERVER:
     - cd /etc/apache2/sites-available/
     - cp 000-default.conf laravel.com.conf
     - nano laravel.com.conf
-        <VirtualHost *:80>
+        Listen 8001
+        <VirtualHost *:8001>
                 ServerAdmin webmaster@localhost
-                DocumentRoot /var/www/html/laravel5.5-reference/public
+                DocumentRoot /var/www/craftimes-api/public
 
-                <Directory /var/www/html/laravel5.5-reference/public/>
+                <Directory /var/www/craftimes-api/public/>
                     Options Indexes FollowSymLinks
                     AllowOverride All
                     Require all granted
@@ -46,6 +47,7 @@ DEPLOYMENT AT UBUNTU SERVER:
     - a2ensite laravel.com.conf
     - a2enmod rewrite
     - service apache2 reload
+    - sudo ufw allow 8081/tcp
 
     - sudo chgrp -R www-data storage bootstrap/cache
     - sudo chmod -R ug+rwx storage bootstrap/cache
