@@ -39,13 +39,13 @@ class SuscripcionController extends Controller
      */
     public function store(Request $request)
     {
+        $culqi = new Culqi(array('api_key' => env('CULQUI_PRIVATE_KEY')));
+        $cliente = Cliente::where('email', $request->cliente['email'])->first();
         $plan = Plan::find($request->plan_id);
+
         if(!$plan) {
             return response(['message' => "No existe el siguiente plan_id: {$request->plan_id}"], 200);
         }
-
-        $culqi = new Culqi(array('api_key' => env('CULQUI_PRIVATE_KEY')));
-        $cliente = Cliente::where('email', $request->cliente['email'])->first();
 
         if (!$cliente) {
             $culqui_cliente = $culqi->Customers->create(
@@ -59,32 +59,46 @@ class SuscripcionController extends Controller
                     "phone_number" => $request->cliente['phone_number'],
                 )
             );
-            $culqi_tarjeta = $culqi->Cards->create(
+            $cliente = new Cliente();
+        }
+        else {
+            $culqui_cliente = $culqi->Customers->update(
+                $cliente->culqui_id,
                 array(
-                    "customer_id" => $culqui_cliente->id,
-                    "token_id" => $request->header('culqui-token-id')
+                    "address" => $request->cliente['address'],
+                    "address_city" => $request->cliente['address_city'],
+                    "country_code" => $request->cliente['country_code'],
+                    "first_name" => $request->cliente['first_name'],
+                    "last_name" => $request->cliente['last_name'],
+                    "phone_number" => $request->cliente['phone_number'],
                 )
             );
-
-            $cliente = new Cliente();
-            $cliente->culqui_id = $culqui_cliente->id;
-            $cliente->culqui_card_id = $culqi_tarjeta->id;
-            $cliente->first_name = $culqui_cliente->antifraud_details->first_name;
-            $cliente->last_name = $culqui_cliente->antifraud_details->last_name;
-            $cliente->email = $culqui_cliente->email;
-            $cliente->address = $culqui_cliente->antifraud_details->address;
-            $cliente->address_city = $culqui_cliente->antifraud_details->address_city;
-            $cliente->country_code = $culqui_cliente->antifraud_details->country_code;
-            $cliente->phone_number = $culqui_cliente->antifraud_details->phone;
-            $cliente->save();
         }
+
+        $culqi_tarjeta = $culqi->Cards->create(
+            array(
+                "customer_id" => $culqui_cliente->id,
+                "token_id" => $request->header('culqui-token-id')
+            )
+        );
 
         $culqui_suscripcion = $culqi->Subscriptions->create(
             array(
-                "card_id" => $cliente->culqui_card_id,
+                "card_id" => $culqi_tarjeta->id,
                 "plan_id" => $plan->culqui_id
             )
         );
+
+        $cliente->culqui_id = $culqui_cliente->id;
+        $cliente->culqui_card_id = $culqi_tarjeta->id;
+        $cliente->first_name = $culqui_cliente->antifraud_details->first_name;
+        $cliente->last_name = $culqui_cliente->antifraud_details->last_name;
+        $cliente->email = $culqui_cliente->email;
+        $cliente->address = $culqui_cliente->antifraud_details->address;
+        $cliente->address_city = $culqui_cliente->antifraud_details->address_city;
+        $cliente->country_code = $culqui_cliente->antifraud_details->country_code;
+        $cliente->phone_number = $culqui_cliente->antifraud_details->phone;
+        $cliente->save();
 
         $suscripcion = new Suscripcion();
         $suscripcion->culqui_suscription_id = $culqui_suscripcion->id;
