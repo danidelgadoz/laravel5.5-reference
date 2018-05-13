@@ -118,6 +118,7 @@ class SuscripcionController extends Controller
         $suscripcion->entrega_referencia = $request->entrega_referencia;
         $suscripcion->plan_id = $plan->id;
         $suscripcion->cliente_id = $cliente->id;
+        $suscripcion->cupon_id = $request->cupon_id;
         $suscripcion->factura_id = $request->factura ? $factura->id : null;
         $suscripcion->save();
 

@@ -40,7 +40,6 @@ class CuponController extends Controller
         $cupon->codigo = $request->codigo;
         $cupon->habilitado = $request->habilitado;
         $cupon->cantidad_disponible = $request->cantidad_disponible;
-        $cupon->cantidad_canjeados = $request->cantidad_canjeados;
         $cupon->fecha_inicio = $request->fecha_inicio;
         $cupon->fecha_fin = $request->fecha_fin;
         $cupon->plan_id = $request->plan_id;
