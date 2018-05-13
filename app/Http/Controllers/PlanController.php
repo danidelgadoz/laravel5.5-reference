@@ -58,6 +58,8 @@ class PlanController extends Controller
         $plan->currency_code = $culqi_plan->currency_code;
         $plan->interval = $culqi_plan->interval;
         $plan->interval_count = $culqi_plan->interval_count;
+        $plan->description = $request->description;
+        $plan->default = $request->default;
         $plan->save();
 
         return response($plan, 201);
