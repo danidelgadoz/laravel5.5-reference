@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Suscripcion;
 use App\Cliente;
 use App\Plan;
+use App\Factura;
 use Illuminate\Http\Request;
 use Culqi\Culqi;
 
@@ -100,6 +101,16 @@ class SuscripcionController extends Controller
         $cliente->phone_number = $culqui_cliente->antifraud_details->phone;
         $cliente->save();
 
+        if ($request->factura) {
+            $factura = new Factura();
+            $factura->ruc = $request->factura['ruc'];
+            $factura->razon_social = $request->factura['razon_social'];
+            $factura->direccion = $request->factura['direccion'];
+            $factura->distrito = $request->factura['distrito'];
+            $factura->referencia = $request->factura['referencia'];
+            $factura->save();
+        }
+
         $suscripcion = new Suscripcion();
         $suscripcion->culqui_suscription_id = $culqui_suscripcion->id;
         $suscripcion->entrega_direccion = $request->entrega_direccion;
@@ -107,6 +118,7 @@ class SuscripcionController extends Controller
         $suscripcion->entrega_referencia = $request->entrega_referencia;
         $suscripcion->plan_id = $plan->id;
         $suscripcion->cliente_id = $cliente->id;
+        $suscripcion->factura_id = $request->factura ? $factura->id : null;
         $suscripcion->save();
 
         return response([
