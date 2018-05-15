@@ -43,11 +43,12 @@ class SuscripcionController extends Controller
     {
         $culqi = new Culqi(array('api_key' => env('CULQUI_PRIVATE_KEY')));
         $cliente = Cliente::where('email', $request->cliente['email'])->first();
-        $plan = Plan::find($request->plan_id);
+        $culqi_token = $culqi->Tokens->get($request->header('culqui-token-id'));
 
-        if(!$plan) {
-            return response(['message' => "No existe el siguiente plan_id: {$request->plan_id}"], 200);
-        }
+        if ($culqi_token->iin->issuer->name === 'INTERBANK')
+            $plan = Plan::where('bbva', true)->first();
+        else
+            $plan = Plan::where('default', true)->first();
 
         if (!$cliente) {
             $culqui_cliente = $culqi->Customers->create(
