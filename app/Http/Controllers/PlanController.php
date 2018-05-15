@@ -60,6 +60,7 @@ class PlanController extends Controller
         $plan->interval_count = $culqi_plan->interval_count;
         $plan->description = $request->description;
         $plan->default = $request->default;
+        $plan->bbva = $request->bbva;
         $plan->save();
 
         return response($plan, 201);
