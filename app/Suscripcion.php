@@ -14,7 +14,7 @@ class Suscripcion extends Model
     public $timestamps = true;
     protected $dates = ['deleted_at'];
     protected $guarded = ['id',"deleted_at","created_at","updated_at"];
-    protected $with = ['cliente', 'plan', 'cupon', 'factura'];
+    protected $with = ['cliente', 'plan', 'cupon', 'factura', 'delivery'];
 
     public function cliente()
     {
@@ -34,5 +34,9 @@ class Suscripcion extends Model
     public function factura()
     {
         return $this->hasOne('App\Factura', 'id', 'factura_id');
+    }
+    public function delivery()
+    {
+        return $this->hasOne('App\Delivery', 'id', 'delivery_id');
     }
 }

@@ -6,6 +6,7 @@ use App\Suscripcion;
 use App\Cliente;
 use App\Plan;
 use App\Factura;
+use App\Delivery;
 use Illuminate\Http\Request;
 use Culqi\Culqi;
 
@@ -111,15 +112,22 @@ class SuscripcionController extends Controller
             $factura->save();
         }
 
+        $delivery = new Delivery();
+        $delivery->direccion = $request->entrega_direccion;
+        $delivery->distrito = $request->entrega_distrito;
+        $delivery->referencia = $request->entrega_referencia;
+        $delivery->nombres = $request->entrega_remitente;
+        $delivery->email = $request->entrega_email;
+        $delivery->celular = $request->entrega_celular;
+        $delivery->save();
+
         $suscripcion = new Suscripcion();
         $suscripcion->culqui_suscription_id = $culqui_suscripcion->id;
-        $suscripcion->entrega_direccion = $request->entrega_direccion;
-        $suscripcion->entrega_distrito = $request->entrega_distrito;
-        $suscripcion->entrega_referencia = $request->entrega_referencia;
         $suscripcion->plan_id = $plan->id;
         $suscripcion->cliente_id = $cliente->id;
         $suscripcion->cupon_id = $request->cupon_id;
         $suscripcion->factura_id = $request->factura ? $factura->id : null;
+        $suscripcion->delivery_id = $delivery->id;
         $suscripcion->save();
 
         return response([
