@@ -133,7 +133,18 @@ class SuscripcionController extends Controller
         return response([
             'carftime_id'=> $suscripcion->id,
             'culqui_id'=> $suscripcion->culqui_suscription_id,
-            'message' => "Registro de cargo de suscripción exitoso"
+            'message' => "Registro de cargo de suscripción exitoso",
+            'plan' => [
+                'name' => $suscripcion->plan->name,
+                'amount' => $suscripcion->plan->amount,
+                'currency_code' => $suscripcion->plan->currency_code,
+                'interval' => $suscripcion->plan->interval,
+                'interval_count' => $suscripcion->plan->interval_count,
+                'interval_count' => $suscripcion->plan->interval_count,
+                'default' => $suscripcion->plan->default,
+                'bbva' => $suscripcion->plan->bbva,
+
+            ]
         ], 200);
     }
 
