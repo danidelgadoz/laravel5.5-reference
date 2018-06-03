@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\ContactoLog;
+use App\Mail\ContactUs;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class ContactoLogController extends Controller
 {
@@ -43,6 +45,7 @@ class ContactoLogController extends Controller
         $contacto->mensaje = $request->mensaje;
         $contacto->save();
 
+        Mail::send(new ContactUs($contacto));
         return response($contacto, 201);
     }
 
