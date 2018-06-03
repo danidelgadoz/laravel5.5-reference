@@ -24,3 +24,4 @@ Route::apiResource('factura', 'FacturaController');
 Route::apiResource('suscripcion', 'SuscripcionController');
 Route::apiResource('delivery', 'DeliveryController');
 Route::apiResource('contacto-log', 'ContactoLogController');
+Route::apiResource('mailing-suscripcion', 'MailingSuscripcionController');
