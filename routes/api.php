@@ -17,7 +17,6 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('plan', 'PlanController');
 Route::apiResource('cliente', 'ClienteController');
 Route::apiResource('cupon', 'CuponController');
 Route::apiResource('factura', 'FacturaController');
@@ -25,3 +24,7 @@ Route::apiResource('suscripcion', 'SuscripcionController');
 Route::apiResource('delivery', 'DeliveryController');
 Route::apiResource('contacto-log', 'ContactoLogController');
 Route::apiResource('mailing-suscripcion', 'MailingSuscripcionController');
+
+Route::prefix('admin')->middleware('auth:api')->group(function () {
+    Route::apiResource('plan', 'PlanController');
+});
