@@ -17,9 +17,17 @@ class SuscripcionController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        $suscripciones = Suscripcion::all();
+        if($request->estado) {
+            if($request->estado == 'ALL')
+                $suscripciones = Suscripcion::all();
+            else
+                $suscripciones = Suscripcion::where('estado', $request->estado)->get();
+        } else {
+            $suscripciones = Suscripcion::all();
+        }
+
         return response($suscripciones, 200);
     }
 
@@ -148,5 +156,12 @@ class SuscripcionController extends Controller
     public function destroy(Suscripcion $suscripcion)
     {
         //
+    }
+
+    public function confirm(Request $request, Suscripcion $suscripcion)
+    {
+        $suscripcion->estado = 'CONFIRMADA';
+        $suscripcion->save();
+        return response($suscripcion, 200);
     }
 }
