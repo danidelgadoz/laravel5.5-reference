@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Cliente;
 use Illuminate\Http\Request;
-use Culqi\Culqi;
 
 class ClienteController extends Controller
 {
@@ -37,28 +36,14 @@ class ClienteController extends Controller
      */
     public function store(Request $request)
     {
-        $culqi = new Culqi(array('api_key' => env('CULQUI_PRIVATE_KEY')));
-        $culqui_cliente = $culqi->Customers->create(
-            array(
-                "address" => $request->address,
-                "address_city" => $request->address_city,
-                "country_code" => $request->country_code,
-                "email" => $request->email,
-                "first_name" => $request->first_name,
-                "last_name" => $request->last_name,
-                "phone_number" => $request->phone_number,
-            )
-        );
-
         $cliente = new Cliente();
-        $cliente->culqui_id = $culqui_cliente->id;
-        $cliente->first_name = $culqui_cliente->antifraud_details->first_name;
-        $cliente->last_name = $culqui_cliente->antifraud_details->last_name;
-        $cliente->email = $culqui_cliente->email;
-        $cliente->address = $culqui_cliente->antifraud_details->address;
-        $cliente->address_city = $culqui_cliente->antifraud_details->address_city;
-        $cliente->country_code = $culqui_cliente->antifraud_details->country_code;
-        $cliente->phone_number = $culqui_cliente->antifraud_details->phone;
+        $cliente->first_name = $request->first_name;
+        $cliente->last_name = $request->last_name;
+        $cliente->email = $request->email;
+        $cliente->address = $request->address;
+        $cliente->address_city = $request->address_city;
+        $cliente->country_code = $request->country_code;
+        $cliente->phone_number = $request->phone_number;
         $cliente->save();
 
         return response($cliente, 201);

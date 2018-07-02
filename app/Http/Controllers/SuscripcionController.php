@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\DB;
 use App\Suscripcion;
 use App\Cliente;
 use App\Plan;
 use App\Factura;
 use App\Delivery;
 use Illuminate\Http\Request;
-use Culqi\Culqi;
 
 class SuscripcionController extends Controller
 {
@@ -41,112 +41,55 @@ class SuscripcionController extends Controller
      */
     public function store(Request $request)
     {
-        $culqi = new Culqi(array('api_key' => env('CULQUI_PRIVATE_KEY')));
-        $culqi_token = $culqi->Tokens->get($request->header('culqui-token-id'));
-        $cliente = Cliente::where('email', $culqi_token->email)->first();
 
-        if ($culqi_token->iin->issuer->name === 'INTERBANK')
-            $plan = Plan::where('bbva', true)->first();
-        else
+        $suscripcion = DB::transaction(function () use ($request) {
+            $cliente = Cliente::where('email', $request->cliente['email'])->first();
             $plan = Plan::where('default', true)->first();
 
-        if (!$cliente) {
-            $culqui_cliente = $culqi->Customers->create(
-                array(
-                    "address" => $request->cliente['address'],
-                    "address_city" => $request->cliente['address_city'],
-                    "country_code" => $request->cliente['country_code'],
-                    "email" => $request->cliente['email'],
-                    "first_name" => $request->cliente['first_name'],
-                    "last_name" => $request->cliente['last_name'],
-                    "phone_number" => $request->cliente['phone_number'],
-                )
-            );
-            $culqi_tarjeta = $culqi->Cards->create(
-                array(
-                    "customer_id" => $culqui_cliente->id,
-                    "token_id" => $culqi_token->id
-                )
-            );
-            $card_id_for_suscription = $culqi_tarjeta->id;
-            $cliente = new Cliente();
-        }
-        else {
-            $culqui_cliente = $culqi->Customers->update(
-                $cliente->culqui_id,
-                array(
-                    "address" => $request->cliente['address'],
-                    "address_city" => $request->cliente['address_city'],
-                    "country_code" => $request->cliente['country_code'],
-                    "first_name" => $request->cliente['first_name'],
-                    "last_name" => $request->cliente['last_name'],
-                    "phone_number" => $request->cliente['phone_number'],
-                )
-            );
-            if ($cliente->card_number === $culqi_token->card_number ) {
-                $card_id_for_suscription = $cliente->culqui_card_id;
-
-            } else {
-                $culqi_tarjeta = $culqi->Cards->create(
-                    array(
-                        "customer_id" => $cliente->culqui_id,
-                        "token_id" => $culqi_token->id
-                    )
-                );
-                $card_id_for_suscription = $culqi_tarjeta->id;
+            if (!$cliente) {
+                $cliente = new Cliente();
+                $cliente->card_number = null;
+                $cliente->first_name = $request->cliente['first_name'];
+                $cliente->last_name = $request->cliente['last_name'];
+                $cliente->email = $request->cliente['email'];
+                $cliente->address = $request->cliente['address'];
+                $cliente->address_city = $request->cliente['address_city'];
+                $cliente->country_code = $request->cliente['country_code'];
+                $cliente->phone_number = $request->cliente['phone_number'];
+                $cliente->save();
             }
-        }
 
-        $culqui_suscripcion = $culqi->Subscriptions->create(
-            array(
-                "card_id" => $card_id_for_suscription,
-                "plan_id" => $plan->culqui_id
-            )
-        );
+            if ($request->factura) {
+                $factura = new Factura();
+                $factura->ruc = $request->factura['ruc'];
+                $factura->razon_social = $request->factura['razon_social'];
+                $factura->direccion = $request->factura['direccion'];
+                $factura->distrito = $request->factura['distrito'];
+                $factura->referencia = $request->factura['referencia'];
+                $factura->save();
+            }
 
-        $cliente->culqui_id = $culqui_cliente->id;
-        $cliente->culqui_card_id = $culqi_tarjeta->id;
-        $cliente->card_number = $culqi_token->card_number;
-        $cliente->first_name = $culqui_cliente->antifraud_details->first_name;
-        $cliente->last_name = $culqui_cliente->antifraud_details->last_name;
-        $cliente->email = $culqui_cliente->email;
-        $cliente->address = $culqui_cliente->antifraud_details->address;
-        $cliente->address_city = $culqui_cliente->antifraud_details->address_city;
-        $cliente->country_code = $culqui_cliente->antifraud_details->country_code;
-        $cliente->phone_number = $culqui_cliente->antifraud_details->phone;
-        $cliente->save();
+            $delivery = new Delivery();
+            $delivery->direccion = $request->entrega_direccion;
+            $delivery->distrito = $request->entrega_distrito;
+            $delivery->referencia = $request->entrega_referencia;
+            $delivery->nombres = $request->entrega_remitente;
+            $delivery->email = $request->entrega_email;
+            $delivery->celular = $request->entrega_celular;
+            $delivery->save();
 
-        if ($request->factura) {
-            $factura = new Factura();
-            $factura->ruc = $request->factura['ruc'];
-            $factura->razon_social = $request->factura['razon_social'];
-            $factura->direccion = $request->factura['direccion'];
-            $factura->distrito = $request->factura['distrito'];
-            $factura->referencia = $request->factura['referencia'];
-            $factura->save();
-        }
+            $suscripcion = new Suscripcion();
+            $suscripcion->plan_id = $plan->id;
+            $suscripcion->cliente_id = $cliente->id;
+            $suscripcion->cupon_id = $request->cupon_id;
+            $suscripcion->factura_id = $request->factura ? $factura->id : null;
+            $suscripcion->delivery_id = $delivery->id;
+            $suscripcion->save();
 
-        $delivery = new Delivery();
-        $delivery->direccion = $request->entrega_direccion;
-        $delivery->distrito = $request->entrega_distrito;
-        $delivery->referencia = $request->entrega_referencia;
-        $delivery->nombres = $request->entrega_remitente;
-        $delivery->email = $request->entrega_email;
-        $delivery->celular = $request->entrega_celular;
-        $delivery->save();
-
-        $suscripcion = new Suscripcion();
-        $suscripcion->culqui_suscription_id = $culqui_suscripcion->id;
-        $suscripcion->plan_id = $plan->id;
-        $suscripcion->cliente_id = $cliente->id;
-        $suscripcion->cupon_id = $request->cupon_id;
-        $suscripcion->factura_id = $request->factura ? $factura->id : null;
-        $suscripcion->delivery_id = $delivery->id;
-        $suscripcion->save();
+            return $suscripcion;
+        });
 
         return response([
-            'carftime_id'=> $suscripcion->id,
-            'culqui_id'=> $suscripcion->culqui_suscription_id,
             'message' => "Registro de cargo de suscripción exitoso",
             'plan' => [
                 'name' => $suscripcion->plan->name,

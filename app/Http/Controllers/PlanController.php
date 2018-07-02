@@ -6,7 +6,6 @@ use App\Plan;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
-use Culqi\Culqi;
 
 class PlanController extends Controller
 {
@@ -39,25 +38,12 @@ class PlanController extends Controller
      */
     public function store(Request $request)
     {
-        $SECRET_KEY = env('CULQUI_PRIVATE_KEY');
-        $culqi = new Culqi(array('api_key' => $SECRET_KEY));
-        $culqi_plan = $culqi->Plans->create(
-            array(
-                "amount" => $request->amount,
-                "currency_code" => $request->currency_code,
-                "interval" => $request->interval,
-                "interval_count" => $request->interval_count,
-                "name" => $request->name
-            )
-        );
-
         $plan = new Plan;
-        $plan->culqui_id = $culqi_plan->id;
-        $plan->name = $culqi_plan->name;
-        $plan->amount = $culqi_plan->amount;
-        $plan->currency_code = $culqi_plan->currency_code;
-        $plan->interval = $culqi_plan->interval;
-        $plan->interval_count = $culqi_plan->interval_count;
+        $plan->name = $request->name;
+        $plan->amount = $request->amount;
+        $plan->currency_code = $request->currency_code;
+        $plan->interval = $request->interval;
+        $plan->interval_count = $request->interval_count;
         $plan->description = $request->description;
         $plan->default = $request->default;
         $plan->bbva = $request->bbva;
