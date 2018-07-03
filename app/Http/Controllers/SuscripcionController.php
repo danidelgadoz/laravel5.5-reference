@@ -121,7 +121,7 @@ class SuscripcionController extends Controller
      */
     public function show(Suscripcion $suscripcion)
     {
-        //
+        return response($suscripcion, 200);
     }
 
     /**
