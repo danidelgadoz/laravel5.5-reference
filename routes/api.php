@@ -24,6 +24,7 @@ Route::apiResource('suscripcion', 'SuscripcionController');
 Route::apiResource('delivery', 'DeliveryController');
 Route::apiResource('contacto-log', 'ContactoLogController');
 Route::apiResource('mailing-suscripcion', 'MailingSuscripcionController');
+Route::apiResource('reclamacion', 'ReclamacionController');
 Route::get('suscripcion/{suscripcion}/confirm', 'SuscripcionController@confirm');
 
 Route::prefix('admin')->middleware('auth:api')->group(function () {
