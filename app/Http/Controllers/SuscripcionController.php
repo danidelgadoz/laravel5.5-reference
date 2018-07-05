@@ -164,4 +164,11 @@ class SuscripcionController extends Controller
         $suscripcion->save();
         return response($suscripcion, 200);
     }
+
+    public function cancel(Request $request, Suscripcion $suscripcion)
+    {
+        $suscripcion->estado = 'CANCELADA';
+        $suscripcion->save();
+        return response($suscripcion, 200);
+    }
 }
