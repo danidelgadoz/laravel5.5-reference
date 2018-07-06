@@ -70,4 +70,5 @@ OAUTH IMPLEMETATION:
     - php artisan db:seed
 
 
-
+Excel implementation:
+    - composer require maatwebsite/excel:~2.1
