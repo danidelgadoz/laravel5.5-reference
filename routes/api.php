@@ -27,6 +27,7 @@ Route::apiResource('mailing-suscripcion', 'MailingSuscripcionController');
 Route::apiResource('reclamacion', 'ReclamacionController');
 Route::get('suscripcion/{suscripcion}/confirm', 'SuscripcionController@confirm');
 Route::get('suscripcion/{suscripcion}/cancel', 'SuscripcionController@cancel');
+Route::get('suscripcion/export/excel', 'SuscripcionController@export');
 
 Route::prefix('admin')->middleware('auth:api')->group(function () {
     Route::apiResource('plan', 'PlanController');

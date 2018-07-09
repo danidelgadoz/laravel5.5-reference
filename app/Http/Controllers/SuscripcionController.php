@@ -9,6 +9,7 @@ use App\Plan;
 use App\Factura;
 use App\Delivery;
 use Illuminate\Http\Request;
+use Excel;
 
 class SuscripcionController extends Controller
 {
@@ -170,5 +171,61 @@ class SuscripcionController extends Controller
         $suscripcion->estado = 'CANCELADA';
         $suscripcion->save();
         return response($suscripcion, 200);
+    }
+
+    public function export(Request $request)
+    {
+        $suscripciones = Suscripcion::all()->map(function ($item) {
+            $item['cliente_first_name'] = $item->cliente['first_name'];
+            $item['cliente_last_name'] = $item->cliente['last_name'];
+            $item['cliente_email'] = $item->cliente['email'];
+            $item['cliente_address'] = $item->cliente['address'];
+            $item['cliente_address_city'] = $item->cliente['address_city'];
+            $item['cliente_country_code'] = $item->cliente['country_code'];
+            $item['cliente_phone_number'] = $item->cliente['phone_number'];
+            $item['plan_name'] = $item->plan['name'];
+            $item['plan_amount'] = $item->plan['amount'];
+            $item['plan_currency_code'] = $item->plan['currency_code'];
+            $item['plan_description'] = $item->plan['description'];
+            $item['plan_default'] = $item->plan['default'];
+            $item['plan_bbva'] = $item->plan['bbva'];
+            $item['factura_ruc'] = $item->factura['ruc'];
+            $item['factura_razon_social'] = $item->factura['razon_social'];
+            $item['factura_direccion'] = $item->factura['direccion'];
+            $item['factura_distrito'] = $item->factura['distrito'];
+            $item['factura_referencia'] = $item->factura['referencia'];
+            $item['delivery_nombres'] = $item->delivery['nombres'];
+            $item['delivery_email'] = $item->delivery['email'];
+            $item['delivery_celular'] = $item->delivery['celular'];
+            $item['delivery_direccion'] = $item->delivery['direccion'];
+            $item['delivery_distrito'] = $item->delivery['distrito'];
+            $item['delivery_referencia'] = $item->delivery['referencia'];
+            return collect($item->toArray())
+                ->except([
+                    'factura_id',
+                    'cupon_id',
+                    'cliente_id',
+                    'plan_id',
+                    'delivery_id',
+                    'updated_at',
+                    'deleted_at',
+                    'cliente',
+                    'plan',
+                    'cupon',
+                    'factura',
+                    'delivery'
+                ])->all();
+        });
+
+        Excel::create('Filename', function($excel) use ($suscripciones) {
+            $excel->setTitle('Payments');
+            $excel->setCreator('Laravel')->setCompany('WJ Gilmore, LLC');
+            $excel->setDescription('payments file');
+
+            // Build the spreadsheet, passing in the payments array
+            $excel->sheet('sheet1', function($sheet) use ($suscripciones) {
+                $sheet->fromArray($suscripciones, null, 'A1', false, true);
+            });
+        })->export('xls');
     }
 }
