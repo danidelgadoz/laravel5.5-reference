@@ -30,6 +30,7 @@ Route::apiResource('reclamacion', 'ReclamacionController');
 Route::get('suscripcion/{suscripcion}/confirm', 'SuscripcionController@confirm');
 Route::get('suscripcion/{suscripcion}/cancel', 'SuscripcionController@cancel');
 Route::get('suscripcion/export/excel', 'SuscripcionController@export');
+Route::post('compra/giftcard', 'CompraController@giftcard');
 Route::post('suscripcion_pagada/giftcard/validar', 'SuscripcionPagadaController@validarGiftcard');
 Route::put('suscripcion_pagada/giftcard/canjear', 'SuscripcionPagadaController@canjearGiftcard');
 

@@ -42,6 +42,62 @@ class CompraController extends Controller
      */
     public function store(Request $request)
     {
+        //
+    }
+
+    /**
+     * Display the specified resource.
+     *
+     * @param  \App\Compra  $compra
+     * @return \Illuminate\Http\Response
+     */
+    public function show(Compra $compra)
+    {
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Compra  $compra
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Compra $compra)
+    {
+        //
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Compra  $compra
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request, Compra $compra)
+    {
+        //
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     *
+     * @param  \App\Compra  $compra
+     * @return \Illuminate\Http\Response
+     */
+    public function destroy(Compra $compra)
+    {
+        //
+    }
+
+    /**
+     * Store a newly created resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
+    public function giftcard(Request $request)
+    {
         $compra = DB::transaction(function () use ($request) {
             $cliente = Cliente::where('email', $request->cliente['email'])->first();
             $plan = Plan::where('default', true)->first();
@@ -105,51 +161,6 @@ class CompraController extends Controller
             'message' => "Registro de compra exitoso.",
         ], 201);
 
-    }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Compra  $compra
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Compra $compra)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Compra  $compra
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Compra $compra)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Compra  $compra
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Compra $compra)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Compra  $compra
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Compra $compra)
-    {
-        //
     }
 
     /**
