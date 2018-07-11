@@ -21,6 +21,7 @@ Route::apiResource('cliente', 'ClienteController');
 Route::apiResource('cupon', 'CuponController');
 Route::apiResource('factura', 'FacturaController');
 Route::apiResource('suscripcion', 'SuscripcionController');
+Route::apiResource('compra', 'CompraController');
 Route::apiResource('delivery', 'DeliveryController');
 Route::apiResource('contacto-log', 'ContactoLogController');
 Route::apiResource('mailing-suscripcion', 'MailingSuscripcionController');
