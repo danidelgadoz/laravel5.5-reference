@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use App\Giftcard;
+use Illuminate\Support\Facades\DB;
+use App\SuscripcionPagada;
 use App\Delivery;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
 
-class GiftcardController extends Controller
+class SuscripcionPagadaController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -16,8 +16,8 @@ class GiftcardController extends Controller
      */
     public function index()
     {
-        $giftcards = Giftcard::all();
-        return response($giftcards, 200);
+        $suscripciones_pagadas = SuscripcionPagada::all();
+        return response($suscripciones_pagadas, 200);
     }
 
     /**
@@ -44,21 +44,21 @@ class GiftcardController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Giftcard  $giftcard
+     * @param  \App\SuscripcionPagada  $suscripcion_pagada
      * @return \Illuminate\Http\Response
      */
-    public function show(Giftcard $giftcard)
+    public function show(SuscripcionPagada $suscripcion_pagada)
     {
-        return response($giftcard, 200);
+        return response($suscripcion_pagada, 200);
     }
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Giftcard  $giftcard
+     * @param  \App\SuscripcionPagada  $suscripcion_pagada
      * @return \Illuminate\Http\Response
      */
-    public function edit(Giftcard $giftcard)
+    public function edit(SuscripcionPagada $suscripcion_pagada)
     {
         //
     }
@@ -67,10 +67,10 @@ class GiftcardController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Giftcard  $giftcard
+     * @param  \App\SuscripcionPagada  $suscipcion_pagada
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Giftcard $giftcard)
+    public function update(Request $request, SuscripcionPagada $suscripcion_pagada)
     {
         //
     }
@@ -78,33 +78,32 @@ class GiftcardController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Giftcard  $giftcard
+     * @param  \App\SuscripcionPagada  $suscripcion_pagada
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Giftcard $giftcard)
+    public function destroy(SuscripcionPagada $suscripcion_pagada)
     {
         //
     }
 
-    public function validar(Request $request)
+    public function validarGiftcard(Request $request)
     {
-        $giftcard = Giftcard::where('codigo', $request->codigo)
-//                    ->where('canjeado', null)
+        $giftcard = SuscripcionPagada::where('giftcard_codigo', $request->codigo)
                     ->firstOrFail();
 
-        if ($giftcard->canjeado)
+        if ($giftcard->fecha_de_inicio)
             return response(['error' => "Giftcard anteriormente canjeado."], 409);
         else
             return response(['message' => "Giftcard disponible."], 200);
 
     }
 
-    public function canjear(Request $request)
+    public function canjearGiftcard(Request $request)
     {
-        $giftcard = Giftcard::where('codigo', $request->codigo)->firstOrFail();
+        $giftcard = SuscripcionPagada::where('giftcard_codigo', $request->codigo)->firstOrFail();
 
         if ($giftcard->canjeado) {
-            return response(['error' => "Giftcard anteriormente canjeado."], 409);
+            return response(['error' => "SuscripcionPagada anteriormente canjeado."], 409);
 
         } else {
             DB::transaction(function () use ($request, $giftcard) {
@@ -118,16 +117,16 @@ class GiftcardController extends Controller
                 $delivery->save();
 
                 $giftcard->delivery_id = $delivery->id;
-                $giftcard->canjeado = date("Y-m-d H:i:s");
+                $giftcard->fecha_de_inicio = date("Y-m-d H:i:s");
                 $giftcard->save();
             });
 
             return response([
-                'message' => "Giftcard canjeado con éxito.",
-                'data' => Giftcard::find($giftcard->id, [
+                'message' => "SuscripcionPagada canjeado con éxito.",
+                'data' => SuscripcionPagada::find($giftcard->id, [
                     'id',
-                    'codigo',
-                    'canjeado',
+                    'giftcard_codigo',
+                    'fecha_de_inicio',
                     'meses',
                     'precio',
                     'delivery_id',

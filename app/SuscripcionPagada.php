@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class Giftcard extends Model
+class SuscripcionPagada extends Model
 {
-    protected $table = 'giftcard';
+    protected $table = 'suscripcion_pagada';
     public $timestamps = true;
     protected $guarded = ['id',"deleted_at","created_at","updated_at"];
     protected $with = ['plan', 'delivery'];

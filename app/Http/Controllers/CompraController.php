@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Compra;
 use App\Cliente;
 use App\Plan;
-use App\Giftcard;
+use App\SuscripcionPagada;
 use App\Factura;
 use Illuminate\Http\Request;
 
@@ -81,20 +81,20 @@ class CompraController extends Controller
             $compra->save();
 
             foreach ($request->giftcards as $suscripcion) {
-                $giftcard = new Giftcard();
-                $giftcard->codigo = $this->random(10);
-//                $giftcard->canjeado = date("Y-m-d H:i:s");
-                $giftcard->meses = $suscripcion["meses"];
-                $giftcard->precio = $plan->precio;
-                $giftcard->entrega_remitente_nombres = $request->giftcards_entrega_remitente_nombres;
-                $giftcard->entrega_remitente_email = $request->giftcards_entrega_remitente_email;
-                $giftcard->entrega_remitente_telefono = $request->giftcards_entrega_remitente_telefono;
-                $giftcard->entrega_direccion = $request->giftcards_entrega_direccion;
-                $giftcard->entrega_distrito = $request->giftcards_entrega_distrito;
-                $giftcard->entrega_referencia = $request->giftcards_entrega_referencia;
-                $giftcard->compra_id = $compra->id;
-                $giftcard->plan_id = $plan->id;
-                $giftcard->save();
+                $suscripcion_pagada = new SuscripcionPagada();
+                $suscripcion_pagada->meses = $suscripcion["meses"];
+                $suscripcion_pagada->precio = $plan->precio;
+                $suscripcion_pagada->fecha_de_inicio = null;
+                $suscripcion_pagada->giftcard_codigo = $this->random(10);
+                $suscripcion_pagada->giftcard_remitente_nombres = $request->giftcards_remitente_nombres;
+                $suscripcion_pagada->giftcard_remitente_email = $request->giftcards_remitente_email;
+                $suscripcion_pagada->giftcard_remitente_telefono = $request->giftcards_remitente_telefono;
+                $suscripcion_pagada->giftcard_entregaa_direccion = $request->giftcards_entrega_direccion;
+                $suscripcion_pagada->giftcard_entrega_distrito = $request->giftcards_entrega_distrito;
+                $suscripcion_pagada->giftcard_entrega_referencia = $request->giftcards_entrega_referencia;
+                $suscripcion_pagada->compra_id = $compra->id;
+                $suscripcion_pagada->plan_id = $plan->id;
+                $suscripcion_pagada->save();
             }
 
             return $compra;

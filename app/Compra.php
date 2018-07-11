@@ -13,7 +13,7 @@ class Compra extends Model
     public $timestamps = true;
     protected $dates = ['deleted_at'];
     protected $guarded = ['id',"deleted_at","created_at","updated_at"];
-    protected $with = ['cliente', 'cupon', 'factura', 'giftcards'];
+    protected $with = ['cliente', 'cupon', 'factura', 'suscripciones'];
 
     public function cliente()
     {
@@ -30,8 +30,8 @@ class Compra extends Model
         return $this->hasOne('App\Cupon', 'id', 'cupon_id');
     }
 
-    public function giftcards()
+    public function suscripciones()
     {
-        return $this->hasMany('App\Giftcard', 'compra_id', 'id');
+        return $this->hasMany('App\SuscripcionPagada', 'compra_id', 'id');
     }
 }

@@ -23,15 +23,15 @@ Route::apiResource('factura', 'FacturaController');
 Route::apiResource('suscripcion', 'SuscripcionController');
 Route::apiResource('compra', 'CompraController');
 Route::apiResource('delivery', 'DeliveryController');
-Route::apiResource('giftcard', 'GiftcardController');
+Route::apiResource('suscripcion_pagada', 'SuscripcionPagadaController');
 Route::apiResource('contacto-log', 'ContactoLogController');
 Route::apiResource('mailing-suscripcion', 'MailingSuscripcionController');
 Route::apiResource('reclamacion', 'ReclamacionController');
 Route::get('suscripcion/{suscripcion}/confirm', 'SuscripcionController@confirm');
 Route::get('suscripcion/{suscripcion}/cancel', 'SuscripcionController@cancel');
 Route::get('suscripcion/export/excel', 'SuscripcionController@export');
-Route::post('giftcard/validar', 'GiftcardController@validar');
-Route::put('giftcard/canjear', 'GiftcardController@canjear');
+Route::post('suscripcion_pagada/giftcard/validar', 'SuscripcionPagadaController@validarGiftcard');
+Route::put('suscripcion_pagada/giftcard/canjear', 'SuscripcionPagadaController@canjearGiftcard');
 
 Route::prefix('admin')->middleware('auth:api')->group(function () {
     Route::apiResource('plan', 'PlanController');
