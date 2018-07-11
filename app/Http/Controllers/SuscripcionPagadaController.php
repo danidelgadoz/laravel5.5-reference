@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use App\SuscripcionPagada;
+use App\Compra;
 use App\Delivery;
 use Illuminate\Http\Request;
 
@@ -88,51 +89,64 @@ class SuscripcionPagadaController extends Controller
 
     public function validarGiftcard(Request $request)
     {
-        $giftcard = SuscripcionPagada::where('giftcard_codigo', $request->codigo)
-                    ->firstOrFail();
+        $giftcard = SuscripcionPagada::where('giftcard_codigo', $request->codigo)->firstOrFail();
+        $compra = Compra::find($giftcard->compra_id, ['id', 'estado']);
 
         if ($giftcard->fecha_de_inicio)
             return response(['error' => "Giftcard anteriormente canjeado."], 409);
-        else
-            return response(['message' => "Giftcard disponible."], 200);
+
+        if ($compra->estado === 'SOLICITADA')
+            return response(['error' => "Compra de giftcard tiene el pago pendiente"], 409);
+
+        if ($compra->estado === 'CANCELADA')
+            return response(['error' => "Compra de giftcard ha sido cancelada"], 409);
+
+        return response(['message' => "Giftcard disponible."], 200);
 
     }
 
     public function canjearGiftcard(Request $request)
     {
         $giftcard = SuscripcionPagada::where('giftcard_codigo', $request->codigo)->firstOrFail();
+        $compra = Compra::find($giftcard->compra_id, ['id', 'estado']);
 
-        if ($giftcard->canjeado) {
-            return response(['error' => "SuscripcionPagada anteriormente canjeado."], 409);
+        if ($giftcard->fecha_de_inicio)
+            return response(['error' => "Giftcard anteriormente canjeado."], 409);
 
-        } else {
-            DB::transaction(function () use ($request, $giftcard) {
-                $delivery = new Delivery();
-                $delivery->direccion = $request->entrega_direccion;
-                $delivery->distrito = $request->entrega_distrito;
-                $delivery->referencia = $request->entrega_referencia;
-                $delivery->nombres = $request->entrega_remitente;
-                $delivery->email = $request->entrega_email;
-                $delivery->celular = $request->entrega_celular;
-                $delivery->save();
+        if ($compra->estado === 'SOLICITADA')
+            return response(['error' => "Compra de giftcard tiene el pago pendiente"], 409);
 
-                $giftcard->delivery_id = $delivery->id;
-                $giftcard->fecha_de_inicio = date("Y-m-d H:i:s");
-                $giftcard->save();
-            });
+        if ($compra->estado === 'CANCELADA')
+            return response(['error' => "Compra de giftcard ha sido cancelada"], 409);
 
-            return response([
-                'message' => "SuscripcionPagada canjeado con éxito.",
-                'data' => SuscripcionPagada::find($giftcard->id, [
-                    'id',
-                    'giftcard_codigo',
-                    'fecha_de_inicio',
-                    'meses',
-                    'precio',
-                    'delivery_id',
-                    'plan_id'
-                ])
-            ], 200);
-        }
+
+        DB::transaction(function () use ($request, $giftcard) {
+            $delivery = new Delivery();
+            $delivery->direccion = $request->entrega_direccion;
+            $delivery->distrito = $request->entrega_distrito;
+            $delivery->referencia = $request->entrega_referencia;
+            $delivery->nombres = $request->entrega_remitente;
+            $delivery->email = $request->entrega_email;
+            $delivery->celular = $request->entrega_celular;
+            $delivery->save();
+
+            $giftcard->delivery_id = $delivery->id;
+            $giftcard->fecha_de_inicio = date("Y-m-d H:i:s");
+            $giftcard->save();
+        });
+
+        return response([
+            'message' => "SuscripcionPagada canjeado con éxito.",
+            'data' => SuscripcionPagada::find($giftcard->id, [
+                'id',
+                'giftcard_codigo',
+                'fecha_de_inicio',
+                'meses',
+                'precio',
+                'delivery_id',
+                'plan_id'
+            ])
+        ], 200);
+
     }
 }

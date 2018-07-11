@@ -164,6 +164,34 @@ class CompraController extends Controller
     }
 
     /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Compra  $compra
+     * @return \Illuminate\Http\Response
+     */
+    public function confirm(Request $request, Compra $compra)
+    {
+        $compra->estado = 'CONFIRMADA';
+        $compra->save();
+        return response($compra, 200);
+    }
+
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Compra  $compra
+     * @return \Illuminate\Http\Response
+     */
+    public function cancel(Request $request, Compra $compra)
+    {
+        $compra->estado = 'CANCELADA';
+        $compra->save();
+        return response($compra, 200);
+    }
+
+    /**
      * Generate a more truly "random" alpha-numeric string.
      *
      * @param  int  $length

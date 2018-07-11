@@ -33,6 +33,8 @@ Route::get('suscripcion/export/excel', 'SuscripcionController@export');
 Route::post('compra/giftcard', 'CompraController@giftcard');
 Route::post('suscripcion_pagada/giftcard/validar', 'SuscripcionPagadaController@validarGiftcard');
 Route::put('suscripcion_pagada/giftcard/canjear', 'SuscripcionPagadaController@canjearGiftcard');
+Route::put('compra/{compra}/confirm', 'CompraController@confirm');
+Route::put('compra/{compra}/cancel', 'CompraController@cancel');
 
 Route::prefix('admin')->middleware('auth:api')->group(function () {
     Route::apiResource('plan', 'PlanController');
