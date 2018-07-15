@@ -8,6 +8,7 @@ use App\Compra;
 use App\Cliente;
 use App\Plan;
 use App\SuscripcionPagada;
+use App\Giftcard;
 use App\Factura;
 use Illuminate\Http\Request;
 
@@ -141,16 +142,21 @@ class CompraController extends Controller
                 $suscripcion_pagada->meses = $suscripcion["meses"];
                 $suscripcion_pagada->precio = $plan->precio;
                 $suscripcion_pagada->fecha_de_inicio = null;
-                $suscripcion_pagada->giftcard_codigo = $this->random(10);
-                $suscripcion_pagada->giftcard_remitente_nombres = $request->giftcards_remitente_nombres;
-                $suscripcion_pagada->giftcard_remitente_email = $request->giftcards_remitente_email;
-                $suscripcion_pagada->giftcard_remitente_telefono = $request->giftcards_remitente_telefono;
-                $suscripcion_pagada->giftcard_entregaa_direccion = $request->giftcards_entrega_direccion;
-                $suscripcion_pagada->giftcard_entrega_distrito = $request->giftcards_entrega_distrito;
-                $suscripcion_pagada->giftcard_entrega_referencia = $request->giftcards_entrega_referencia;
                 $suscripcion_pagada->compra_id = $compra->id;
                 $suscripcion_pagada->plan_id = $plan->id;
                 $suscripcion_pagada->save();
+
+                $giftcard = new Giftcard();
+                $giftcard->codigo = $this->random(10);
+                $giftcard->remitente_nombres = $request->giftcards_remitente_nombres;
+                $giftcard->remitente_email = $request->giftcards_remitente_email;
+                $giftcard->remitente_telefono = $request->giftcards_remitente_telefono;
+                $giftcard->entrega_direccion = $request->giftcards_entrega_direccion;
+                $giftcard->entrega_distrito = $request->giftcards_entrega_distrito;
+                $giftcard->entrega_referencia = $request->giftcards_entrega_referencia;
+                $giftcard->estado = 'DISPONIBLE';
+                $giftcard->suscripcion_pagada_id = $suscripcion_pagada->id;
+                $giftcard->save();
             }
 
             return $compra;
