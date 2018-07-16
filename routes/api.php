@@ -40,6 +40,7 @@ Route::get('giftcard', 'GiftcardController@index');
 Route::get('giftcard/{giftcard}', 'GiftcardController@show');
 Route::post('giftcard/validar', 'GiftcardController@validar');
 Route::put('giftcard/canjear', 'GiftcardController@canjear');
+Route::get('giftcard/compra/{compra}', 'GiftcardController@getByCompra');
 
 Route::prefix('admin')->middleware('auth:api')->group(function () {
     Route::apiResource('plan', 'PlanController');

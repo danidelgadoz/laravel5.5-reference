@@ -18,8 +18,14 @@ class GiftcardController extends Controller
      */
     public function index()
     {
-        $giftcard = Giftcard::all();
-        return response($giftcard, 200);
+//        $giftcard = Giftcard::all();
+        $giftcards = Giftcard::whereHas('suscripcion_pagada', function ($query) {
+            $query->whereHas('compra', function ($query) {
+                $query->where('estado', 'CONFIRMADA');
+            });
+        })->get();
+
+        return response($giftcards, 200);
     }
 
     /**
@@ -45,6 +51,14 @@ class GiftcardController extends Controller
         //
     }
 
+    public function getByCompra($id)
+    {
+        $giftcards = Giftcard::whereHas('suscripcion_pagada', function ($query) use ($id) {
+            $query->where('compra_id', $id);
+        })->get();
+
+        return response($giftcards, 200);
+    }
 
     public function validar(Request $request)
     {

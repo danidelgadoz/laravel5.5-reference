@@ -17,7 +17,10 @@ class SuscripcionPagadaController extends Controller
      */
     public function index()
     {
-        $suscripciones_pagadas = SuscripcionPagada::all();
+//        $suscripciones_pagadas = SuscripcionPagada::whereNotNull('fecha_de_inicio')->get();
+        $suscripciones_pagadas = SuscripcionPagada::whereHas('compra', function ($query) {
+            $query->where('estado', 'CONFIRMADA');
+        })->get();
         return response($suscripciones_pagadas, 200);
     }
 

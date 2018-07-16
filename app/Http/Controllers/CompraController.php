@@ -132,6 +132,7 @@ class CompraController extends Controller
             $compra->factura_id = $request->factura ? $factura->id : null;
             $compra->amount = 0;
             $compra->precio = 0;
+            $compra->producto = 'GIFTCARD';
             foreach ($request->giftcards as $suscripcion) {
                 $compra->precio = $compra->precio + ($suscripcion['meses'] * $plan->precio);
             }

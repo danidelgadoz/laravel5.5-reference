@@ -13,7 +13,7 @@ class Compra extends Model
     public $timestamps = true;
     protected $dates = ['deleted_at'];
     protected $guarded = ['id',"deleted_at","created_at","updated_at"];
-    protected $with = ['cliente', 'cupon', 'factura', 'suscripciones'];
+    protected $with = ['cliente', 'cupon', 'factura'];//, 'suscripciones'];
 
     public function cliente()
     {
