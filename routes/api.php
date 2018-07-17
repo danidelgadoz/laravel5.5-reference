@@ -21,7 +21,7 @@ Route::apiResource('cliente', 'ClienteController');
 Route::apiResource('cupon', 'CuponController');
 Route::apiResource('factura', 'FacturaController');
 Route::apiResource('suscripcion', 'SuscripcionController');
-Route::apiResource('compra', 'CompraController');
+Route::apiResource('pedido', 'PedidoController');
 Route::apiResource('delivery', 'DeliveryController');
 Route::apiResource('suscripcion_pagada', 'SuscripcionPagadaController');
 Route::apiResource('contacto-log', 'ContactoLogController');
@@ -32,15 +32,15 @@ Route::get('suscripcion/{suscripcion}/confirm', 'SuscripcionController@confirm')
 Route::get('suscripcion/{suscripcion}/cancel', 'SuscripcionController@cancel');
 Route::get('suscripcion/export/excel', 'SuscripcionController@export');
 
-Route::post('compra/giftcard', 'CompraController@giftcard');
-Route::put('compra/{compra}/confirm', 'CompraController@confirm');
-Route::put('compra/{compra}/cancel', 'CompraController@cancel');
+Route::post('pedido/giftcard', 'PedidoController@giftcard');
+Route::put('pedido/{pedido}/confirm', 'PedidoController@confirm');
+Route::put('pedido/{pedido}/cancel', 'PedidoController@cancel');
 
 Route::get('giftcard', 'GiftcardController@index');
 Route::get('giftcard/{giftcard}', 'GiftcardController@show');
 Route::post('giftcard/validar', 'GiftcardController@validar');
 Route::put('giftcard/canjear', 'GiftcardController@canjear');
-Route::get('giftcard/compra/{compra}', 'GiftcardController@getByCompra');
+Route::get('giftcard/pedido/{pedido}', 'GiftcardController@getByPedido');
 
 Route::prefix('admin')->middleware('auth:api')->group(function () {
     Route::apiResource('plan', 'PlanController');

@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
-use App\Compra;
+use App\Pedido;
 use App\Cliente;
 use App\Plan;
 use App\SuscripcionPagada;
@@ -12,7 +12,7 @@ use App\Giftcard;
 use App\Factura;
 use Illuminate\Http\Request;
 
-class CompraController extends Controller
+class PedidoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -21,8 +21,8 @@ class CompraController extends Controller
      */
     public function index()
     {
-        $compra = Compra::all();
-        return response($compra, 200);
+        $pedidos = Pedido::all();
+        return response($pedidos, 200);
     }
 
     /**
@@ -39,22 +39,22 @@ class CompraController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Compra  $compra
+     * @param  \App\Pedido  $pedido
      * @return \Illuminate\Http\Response
      */
-    public function show(Compra $compra)
+    public function show(Pedido $pedido)
     {
-        return response($compra, 200);
+        return response($pedido, 200);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Compra  $compra
+     * @param  \App\Pedido  $pedido
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Compra $compra)
+    public function update(Request $request, Pedido $pedido)
     {
         //
     }
@@ -62,10 +62,10 @@ class CompraController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Compra  $compra
+     * @param  \App\Pedido  $pedido
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Compra $compra)
+    public function destroy(Pedido $pedido)
     {
         //
     }
@@ -78,7 +78,7 @@ class CompraController extends Controller
      */
     public function giftcard(Request $request)
     {
-        $compra = DB::transaction(function () use ($request) {
+        $pedido = DB::transaction(function () use ($request) {
             $cliente = Cliente::where('email', $request->cliente['email'])->first();
             $plan = Plan::where('default', true)->first();
 
@@ -105,47 +105,47 @@ class CompraController extends Controller
                 $factura->save();
             }
 
-            $compra = new Compra();
-            $compra->producto = 'GIFTCARD';
-            $compra->estado = 'SOLICITADA';
-            $compra->amount = 0;
-            $compra->precio = 0;
-            $compra->cliente_id = $cliente->id;
-            $compra->cupon_id = $request->cupon_id;
-            $compra->factura_id = $request->factura ? $factura->id : null;
+            $pedido = new Pedido();
+            $pedido->producto = 'GIFTCARD';
+            $pedido->tipo_de_pago = $request->tipo_de_pago;
+            $pedido->estado = 'SOLICITADA';
+            $pedido->precio = 0;
+            $pedido->cliente_id = $cliente->id;
+            $pedido->cupon_id = $request->cupon_id;
+            $pedido->factura_id = $request->factura ? $factura->id : null;
             foreach ($request->giftcards as $suscripcion) {
-                $compra->precio = $compra->precio + ($suscripcion['meses'] * $plan->precio);
+                $pedido->precio = $pedido->precio + ($suscripcion['meses'] * $plan->precio);
             }
-            $compra->save();
+            $pedido->save();
 
             foreach ($request->giftcards as $suscripcion) {
                 $suscripcion_pagada = new SuscripcionPagada();
                 $suscripcion_pagada->meses = $suscripcion["meses"];
                 $suscripcion_pagada->precio = $plan->precio;
                 $suscripcion_pagada->fecha_de_inicio = null;
-                $suscripcion_pagada->compra_id = $compra->id;
+                $suscripcion_pagada->pedido_id = $pedido->id;
                 $suscripcion_pagada->plan_id = $plan->id;
                 $suscripcion_pagada->save();
 
                 $giftcard = new Giftcard();
                 $giftcard->estado = 'DISPONIBLE';
                 $giftcard->codigo = $this->random(10);
-                $giftcard->remitente_nombres = $request->giftcards_remitente_nombres;
-                $giftcard->remitente_email = $request->giftcards_remitente_email;
-                $giftcard->remitente_telefono = $request->giftcards_remitente_telefono;
-                $giftcard->entrega_direccion = $request->giftcards_entrega_direccion;
-                $giftcard->entrega_distrito = $request->giftcards_entrega_distrito;
-                $giftcard->entrega_referencia = $request->giftcards_entrega_referencia;
+                $giftcard->remitente_nombres = $request->envio['remitente_nombres'];
+                $giftcard->remitente_email = $request->envio['remitente_email'];
+                $giftcard->remitente_telefono = $request->envio['remitente_telefono'];
+                $giftcard->entrega_direccion = $request->envio['direccion'];
+                $giftcard->entrega_distrito = $request->envio['distrito'];
+                $giftcard->entrega_referencia = $request->envio['referencia'];
                 $giftcard->suscripcion_pagada_id = $suscripcion_pagada->id;
                 $giftcard->save();
             }
 
-            return $compra;
+            return $pedido;
         });
 
         return response([
-            'id' => $compra->id,
-            'message' => "Registro de compra exitoso.",
+            'id' => $pedido->id,
+            'message' => "Registro de pedido exitoso.",
         ], 201);
 
     }
@@ -154,28 +154,28 @@ class CompraController extends Controller
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Compra  $compra
+     * @param  \App\Pedido  $pedido
      * @return \Illuminate\Http\Response
      */
-    public function confirm(Request $request, Compra $compra)
+    public function confirm(Request $request, Pedido $pedido)
     {
-        $compra->estado = 'CONFIRMADA';
-        $compra->save();
-        return response($compra, 200);
+        $pedido->estado = 'CONFIRMADA';
+        $pedido->save();
+        return response($pedido, 200);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Compra  $compra
+     * @param  \App\Pedido  $pedido
      * @return \Illuminate\Http\Response
      */
-    public function cancel(Request $request, Compra $compra)
+    public function cancel(Request $request, Pedido $pedido)
     {
-        $compra->estado = 'CANCELADA';
-        $compra->save();
-        return response($compra, 200);
+        $pedido->estado = 'CANCELADA';
+        $pedido->save();
+        return response($pedido, 200);
     }
 
     /**

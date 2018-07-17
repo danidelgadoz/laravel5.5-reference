@@ -9,7 +9,7 @@ class SuscripcionPagada extends Model
     protected $table = 'suscripcion_pagada';
     public $timestamps = true;
     protected $guarded = ['id',"deleted_at","created_at","updated_at"];
-    protected $with = ['plan', 'delivery', 'compra'];
+    protected $with = ['plan', 'delivery', 'pedido'];
 
     public function plan()
     {
@@ -21,8 +21,8 @@ class SuscripcionPagada extends Model
         return $this->hasOne('App\Delivery', 'id', 'delivery_id');
     }
 
-    public function compra()
+    public function pedido()
     {
-        return $this->hasOne('App\Compra', 'id', 'compra_id');
+        return $this->hasOne('App\Pedido', 'id', 'pedido_id');
     }
 }

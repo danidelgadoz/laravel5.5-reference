@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
 use App\SuscripcionPagada;
-use App\Compra;
-use App\Delivery;
 use Illuminate\Http\Request;
 
 class SuscripcionPagadaController extends Controller
@@ -17,7 +15,7 @@ class SuscripcionPagadaController extends Controller
      */
     public function index()
     {
-        $suscripciones_pagadas = SuscripcionPagada::whereHas('compra', function ($query) {
+        $suscripciones_pagadas = SuscripcionPagada::whereHas('pedido', function ($query) {
             $query->where('estado', 'CONFIRMADA');
         })->whereNotNull('fecha_de_inicio')->get();
 
