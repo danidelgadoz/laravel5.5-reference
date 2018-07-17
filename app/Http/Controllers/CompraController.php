@@ -26,16 +26,6 @@ class CompraController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -54,18 +44,7 @@ class CompraController extends Controller
      */
     public function show(Compra $compra)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Compra  $compra
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Compra $compra)
-    {
-        //
+        return response($compra, 200);
     }
 
     /**
@@ -127,12 +106,13 @@ class CompraController extends Controller
             }
 
             $compra = new Compra();
+            $compra->producto = 'GIFTCARD';
+            $compra->estado = 'SOLICITADA';
+            $compra->amount = 0;
+            $compra->precio = 0;
             $compra->cliente_id = $cliente->id;
             $compra->cupon_id = $request->cupon_id;
             $compra->factura_id = $request->factura ? $factura->id : null;
-            $compra->amount = 0;
-            $compra->precio = 0;
-            $compra->producto = 'GIFTCARD';
             foreach ($request->giftcards as $suscripcion) {
                 $compra->precio = $compra->precio + ($suscripcion['meses'] * $plan->precio);
             }
@@ -148,6 +128,7 @@ class CompraController extends Controller
                 $suscripcion_pagada->save();
 
                 $giftcard = new Giftcard();
+                $giftcard->estado = 'DISPONIBLE';
                 $giftcard->codigo = $this->random(10);
                 $giftcard->remitente_nombres = $request->giftcards_remitente_nombres;
                 $giftcard->remitente_email = $request->giftcards_remitente_email;
@@ -155,7 +136,6 @@ class CompraController extends Controller
                 $giftcard->entrega_direccion = $request->giftcards_entrega_direccion;
                 $giftcard->entrega_distrito = $request->giftcards_entrega_distrito;
                 $giftcard->entrega_referencia = $request->giftcards_entrega_referencia;
-                $giftcard->estado = 'DISPONIBLE';
                 $giftcard->suscripcion_pagada_id = $suscripcion_pagada->id;
                 $giftcard->save();
             }

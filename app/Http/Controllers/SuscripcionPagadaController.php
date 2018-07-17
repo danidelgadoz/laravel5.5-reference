@@ -17,21 +17,11 @@ class SuscripcionPagadaController extends Controller
      */
     public function index()
     {
-//        $suscripciones_pagadas = SuscripcionPagada::whereNotNull('fecha_de_inicio')->get();
         $suscripciones_pagadas = SuscripcionPagada::whereHas('compra', function ($query) {
             $query->where('estado', 'CONFIRMADA');
-        })->get();
-        return response($suscripciones_pagadas, 200);
-    }
+        })->whereNotNull('fecha_de_inicio')->get();
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        return response($suscripciones_pagadas, 200);
     }
 
     /**
@@ -54,17 +44,6 @@ class SuscripcionPagadaController extends Controller
     public function show(SuscripcionPagada $suscripcion_pagada)
     {
         return response($suscripcion_pagada, 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\SuscripcionPagada  $suscripcion_pagada
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(SuscripcionPagada $suscripcion_pagada)
-    {
-        //
     }
 
     /**

@@ -18,7 +18,6 @@ class GiftcardController extends Controller
      */
     public function index()
     {
-//        $giftcard = Giftcard::all();
         $giftcards = Giftcard::whereHas('suscripcion_pagada', function ($query) {
             $query->whereHas('compra', function ($query) {
                 $query->where('estado', 'CONFIRMADA');
