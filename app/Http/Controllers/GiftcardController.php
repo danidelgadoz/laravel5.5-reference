@@ -68,7 +68,7 @@ class GiftcardController extends Controller
         if ($suscripcion->fecha_de_inicio)
             return response(['error' => "Giftcard anteriormente canjeado."], 409);
 
-        if ($pedido->estado === 'SOLICITADA')
+        if ($pedido->estado === 'PENDIENTE')
             return response(['error' => "Compra de giftcard tiene el pago pendiente"], 409);
 
         if ($pedido->estado === 'CANCELADA')
@@ -87,7 +87,7 @@ class GiftcardController extends Controller
         if ($suscripcion->fecha_de_inicio)
             return response(['error' => "Giftcard anteriormente canjeado."], 409);
 
-        if ($pedido->estado === 'SOLICITADA')
+        if ($pedido->estado === 'PENDIENTE')
             return response(['error' => "Compra de giftcard tiene el pago pendiente"], 409);
 
         if ($pedido->estado === 'CANCELADA')
