@@ -7,10 +7,10 @@ use Illuminate\Support\Facades\Hash;
 use App\Pedido;
 use App\Cliente;
 use App\Producto;
-use App\SuscripcionPagada;
+use App\PedidoDetalle;
 use App\Giftcard;
 use App\Factura;
-use App\Delivery;
+use App\Suscripcion;
 use Illuminate\Http\Request;
 
 class PedidoController extends Controller
@@ -79,13 +79,13 @@ class PedidoController extends Controller
             foreach ($request->pedido_detalle as $pd) {
                 $producto = Producto::find($pd['producto_id']);
 
-                $suscripcion_pagada = new SuscripcionPagada();
-                $suscripcion_pagada->precio_unitario = $producto->precio;
-                $suscripcion_pagada->cantidad = $pd['cantidad'];
-                $suscripcion_pagada->total = $pd['cantidad'] * $producto->precio;
-                $suscripcion_pagada->pedido_id = $pedido->id;
-                $suscripcion_pagada->producto_id = $producto->id;
-                $suscripcion_pagada->save();
+                $pedido_detalle = new PedidoDetalle();
+                $pedido_detalle->precio_unitario = $producto->precio;
+                $pedido_detalle->cantidad = $pd['cantidad'];
+                $pedido_detalle->total = $pd['cantidad'] * $producto->precio;
+                $pedido_detalle->pedido_id = $pedido->id;
+                $pedido_detalle->producto_id = $producto->id;
+                $pedido_detalle->save();
 
                 if ($pd['tipo'] === "GIFTCARD") {
                     // GIFTCARD
@@ -98,21 +98,21 @@ class PedidoController extends Controller
                     $giftcard->entrega_direccion = $request->envio['direccion'];
                     $giftcard->entrega_distrito = $request->envio['distrito'];
                     $giftcard->entrega_referencia = $request->envio['referencia'];
-                    $giftcard->suscripcion_pagada_id = $suscripcion_pagada->id;
+                    $giftcard->pedido_detalle_id = $pedido_detalle->id;
                     $giftcard->save();
 
                 } else {
                     // SUSCRIPCION
-                    $delivery = new Delivery();
-                    $delivery->fecha_de_inicio = date("Y-m-d H:i:s");
-                    $delivery->nombres = $request->envio['remitente_nombres'];
-                    $delivery->email = $request->envio['remitente_email'];
-                    $delivery->celular = $request->envio['remitente_telefono'];
-                    $delivery->direccion = $request->envio['remitente_nombres'];
-                    $delivery->distrito = $request->envio['remitente_nombres'];
-                    $delivery->referencia = $request->envio['remitente_nombres'];
-                    $delivery->suscripcion_pagada_id = $suscripcion_pagada->id;
-                    $delivery->save();
+                    $suscripcion = new Suscripcion();
+                    $suscripcion->fecha_de_inicio = date("Y-m-d H:i:s");
+                    $suscripcion->nombres = $request->envio['remitente_nombres'];
+                    $suscripcion->email = $request->envio['remitente_email'];
+                    $suscripcion->celular = $request->envio['remitente_telefono'];
+                    $suscripcion->direccion = $request->envio['remitente_nombres'];
+                    $suscripcion->distrito = $request->envio['remitente_nombres'];
+                    $suscripcion->referencia = $request->envio['remitente_nombres'];
+                    $suscripcion->pedido_detalle_id = $pedido_detalle->id;
+                    $suscripcion->save();
                 }
             }
 
@@ -172,7 +172,7 @@ class PedidoController extends Controller
             return response(['error' => "El pedido ya ha sido '{$pedido['estado']}'"], 409);
 
         $pedido_actualizado = DB::transaction(function () use ($pedido) {
-//            SuscripcionPagada::where('pedido_id', $pedido->id)
+//            PedidoDetalle::where('pedido_id', $pedido->id)
 //                ->update([
 //                    'fecha_de_inicio' => date("Y-m-d H:i:s")
 //                ]);

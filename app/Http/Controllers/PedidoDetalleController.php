@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\DB;
-use App\SuscripcionPagada;
+use App\PedidoDetalle;
 use Illuminate\Http\Request;
 
-class SuscripcionPagadaController extends Controller
+class PedidoDetalleController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,12 +15,12 @@ class SuscripcionPagadaController extends Controller
      */
     public function index()
     {
-        $suscripciones_pagadas = SuscripcionPagada::whereHas('pedido', function ($query) {
-            $query->where('estado', 'CONFIRMADA');
+        $pedidos_detalles = PedidoDetalle::whereHas('pedido', function ($query) {
+//            $query->where('estado', 'CONFIRMADA');
         })->get();
 //        })->whereNotNull('fecha_de_inicio')->get();
 
-        return response($suscripciones_pagadas, 200);
+        return response($pedidos_detalles, 200);
     }
 
     /**
@@ -37,22 +37,22 @@ class SuscripcionPagadaController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\SuscripcionPagada  $suscripcion_pagada
+     * @param  \App\PedidoDetalle  $pedido_detalle
      * @return \Illuminate\Http\Response
      */
-    public function show(SuscripcionPagada $suscripcion_pagada)
+    public function show(PedidoDetalle $pedido_detalle)
     {
-        return response($suscripcion_pagada, 200);
+        return response($pedido_detalle, 200);
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\SuscripcionPagada  $suscipcion_pagada
+     * @param  \App\PedidoDetalle  $suscipcion_pagada
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SuscripcionPagada $suscripcion_pagada)
+    public function update(Request $request, PedidoDetalle $pedido_detalle)
     {
         //
     }
@@ -60,10 +60,10 @@ class SuscripcionPagadaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\SuscripcionPagada  $suscripcion_pagada
+     * @param  \App\PedidoDetalle  $pedido_detalle
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SuscripcionPagada $suscripcion_pagada)
+    public function destroy(PedidoDetalle $pedido_detalle)
     {
         //
     }

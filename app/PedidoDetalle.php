@@ -4,9 +4,9 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SuscripcionPagada extends Model
+class PedidoDetalle extends Model
 {
-    protected $table = 'suscripcion_pagada';
+    protected $table = 'pedido_detalle';
     public $timestamps = true;
     protected $guarded = ['id',"deleted_at","created_at","updated_at"];
     protected $with = ['pedido', 'producto'];
@@ -16,9 +16,9 @@ class SuscripcionPagada extends Model
         return $this->hasOne('App\Plan', 'id', 'plan_id');
     }
 
-    public function delivery()
+    public function suscripcion()
     {
-        return $this->hasOne('App\Delivery', 'id', 'delivery_id');
+        return $this->hasOne('App\Suscripcion', 'id', 'suscripcion_id');
     }
 
     public function pedido()

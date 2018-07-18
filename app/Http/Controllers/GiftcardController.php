@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Giftcard;
-use App\SuscripcionPagada;
+use App\PedidoDetalle;
 use App\Pedido;
-use App\Delivery;
+use App\Suscripcion;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -18,7 +18,7 @@ class GiftcardController extends Controller
      */
     public function index()
     {
-        $giftcards = Giftcard::whereHas('suscripcion_pagada', function ($query) {
+        $giftcards = Giftcard::whereHas('pedido_detalle', function ($query) {
             $query->whereHas('pedido', function ($query) {
                 $query->where('estado', 'CONFIRMADA');
             });
@@ -52,7 +52,7 @@ class GiftcardController extends Controller
 
     public function getByPedido($id)
     {
-        $giftcards = Giftcard::whereHas('suscripcion_pagada', function ($query) use ($id) {
+        $giftcards = Giftcard::whereHas('pedido_detalle_id', function ($query) use ($id) {
             $query->where('pedido_id', $id);
         })->get();
 
@@ -62,17 +62,17 @@ class GiftcardController extends Controller
     public function validar(Request $request)
     {
         $giftcard = Giftcard::where('codigo', $request->codigo)->firstOrFail();
-        $suscripcion = SuscripcionPagada::find($giftcard->suscripcion_pagada_id);
-        $pedido = Pedido::find($suscripcion->pedido_id, ['estado']);
+        $pedido_detalle = PedidoDetalle::find($giftcard->pedido_detalle_id);
+        $pedido = Pedido::find($pedido_detalle->pedido_id, ['estado']);
 
-        if ($suscripcion->fecha_de_inicio)
+        if ($giftcard->estado === 'CANJEADO')
             return response(['error' => "Giftcard anteriormente canjeado."], 409);
 
         if ($pedido->estado === 'PENDIENTE')
-            return response(['error' => "Compra de giftcard tiene el pago pendiente"], 409);
+            return response(['error' => "Pedido del giftcard tiene el pago pendiente"], 409);
 
         if ($pedido->estado === 'CANCELADA')
-            return response(['error' => "Compra de giftcard ha sido cancelada"], 409);
+            return response(['error' => "Pedido del giftcard ya ha sido cancelado"], 409);
 
         return response(['message' => "Giftcard disponible."], 200);
 
@@ -81,40 +81,40 @@ class GiftcardController extends Controller
     public function canjear(Request $request)
     {
         $giftcard = Giftcard::where('codigo', $request->codigo)->firstOrFail();
-        $suscripcion = SuscripcionPagada::find($giftcard->suscripcion_pagada_id);
-        $pedido = Pedido::find($suscripcion->pedido_id, ['estado']);
+        $pedido_detalle = PedidoDetalle::find($giftcard->pedido_detalle_id);
+        $pedido = Pedido::find($pedido_detalle->pedido_id, ['estado']);
 
         if ($giftcard->estado === 'CANJEADO')
             return response(['error' => "Giftcard anteriormente canjeado."], 409);
 
         if ($pedido->estado === 'PENDIENTE')
-            return response(['error' => "Compra de giftcard tiene el pago pendiente"], 409);
+            return response(['error' => "Pedido del giftcard tiene el pago pendiente"], 409);
 
         if ($pedido->estado === 'CANCELADA')
-            return response(['error' => "Compra de giftcard ha sido cancelada"], 409);
+            return response(['error' => "Pedido del giftcard ya ha sido cancelado"], 409);
 
-        $delivery = DB::transaction(function () use ($request, $suscripcion, $giftcard) {
-            $delivery = new Delivery();
-            $delivery->meses = $giftcard["meses"];
-            $delivery->fecha_de_inicio = date("Y-m-d H:i:s");
-            $delivery->direccion = $request->envio['direccion'];
-            $delivery->distrito = $request->envio['distrito'];
-            $delivery->referencia = $request->envio['referencia'];
-            $delivery->nombres = $request->envio['remitente_nombres'];
-            $delivery->email = $request->envio['remitente_email'];
-            $delivery->celular = $request->envio['remitente_telefono'];
-            $delivery->suscripcion_pagada_id = $suscripcion->id;
-            $delivery->save();
+        $suscripcion = DB::transaction(function () use ($request, $pedido_detalle, $giftcard) {
+            $suscripcion = new Suscripcion();
+            $suscripcion->meses = $giftcard["meses"];
+            $suscripcion->fecha_de_inicio = date("Y-m-d H:i:s");
+            $suscripcion->direccion = $request->envio['direccion'];
+            $suscripcion->distrito = $request->envio['distrito'];
+            $suscripcion->referencia = $request->envio['referencia'];
+            $suscripcion->nombres = $request->envio['remitente_nombres'];
+            $suscripcion->email = $request->envio['remitente_email'];
+            $suscripcion->celular = $request->envio['remitente_telefono'];
+            $suscripcion->pedido_detalle_id = $pedido_detalle->id;
+            $suscripcion->save();
 
             $giftcard->estado = 'CANJEADO';
             $giftcard->save();
 
-            return $delivery;
+            return $suscripcion;
         });
 
         return response([
-            'message' => "SuscripcionPagada canjeado con éxito.",
-            'data' => Delivery::find($delivery->id)
+            'message' => "Giftcard canjeado con éxito, su suscripcion ha iniciado.",
+            'data' => Suscripcion::find($suscripcion->id)
         ], 200);
 
     }

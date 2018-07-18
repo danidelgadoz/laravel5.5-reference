@@ -10,10 +10,10 @@ class Giftcard extends Model
     public $timestamps = false;
     protected $dates = ['deleted_at'];
     protected $guarded = ['id', "deleted_at", "created_at", "updated_at"];
-    protected $with = ['suscripcion_pagada'];
+    protected $with = ['pedido_detalle'];
 
-    public function suscripcion_pagada()
+    public function pedido_detalle()
     {
-        return $this->hasOne('App\SuscripcionPagada', 'id', 'suscripcion_pagada_id');
+        return $this->hasOne('App\PedidoDetalle', 'id', 'pedido_detalle_id');
     }
 }
