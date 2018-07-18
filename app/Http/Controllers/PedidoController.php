@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Pedido;
 use App\Cliente;
-use App\Plan;
+use App\Producto;
 use App\SuscripcionPagada;
 use App\Giftcard;
 use App\Factura;
@@ -39,7 +39,6 @@ class PedidoController extends Controller
 
         $pedido = DB::transaction(function () use ($request) {
             $cliente = Cliente::where('email', $request->cliente['email'])->first();
-            $plan = Plan::where('default', true)->first();
 
             if (!$cliente) {
                 $cliente = new Cliente();
@@ -71,23 +70,25 @@ class PedidoController extends Controller
             $pedido->cliente_id = $cliente->id;
             $pedido->cupon_id = $request->cupon_id;
             $pedido->factura_id = $request->factura ? $factura->id : null;
-            foreach ($request->productos as $suscripcion) {
-                $pedido->precio = $pedido->precio + ($suscripcion['meses'] * $plan->precio);
+            foreach ($request->pedido_detalle as $pd) {
+                $producto = Producto::find($pd['producto_id']);
+                $pedido->precio = $pedido->precio + ($producto['precio'] * $pd['cantidad']);
             }
             $pedido->save();
 
-            foreach ($request->productos as $suscripcion) {
+            foreach ($request->pedido_detalle as $pd) {
+                $producto = Producto::find($pd['producto_id']);
+
                 $suscripcion_pagada = new SuscripcionPagada();
-                $suscripcion_pagada->meses = $suscripcion["meses"];
-                $suscripcion_pagada->precio = $plan->precio;
+                $suscripcion_pagada->precio_unitario = $producto->precio;
+                $suscripcion_pagada->cantidad = $pd['cantidad'];
+                $suscripcion_pagada->total = $pd['cantidad'] * $producto->precio;
                 $suscripcion_pagada->pedido_id = $pedido->id;
-                $suscripcion_pagada->plan_id = $plan->id;
+                $suscripcion_pagada->producto_id = $producto->id;
+                $suscripcion_pagada->save();
 
-                if ($suscripcion['tipo'] === "GIFTCARD") {
+                if ($pd['tipo'] === "GIFTCARD") {
                     // GIFTCARD
-                    $suscripcion_pagada->fecha_de_inicio = null;
-                    $suscripcion_pagada->save();
-
                     $giftcard = new Giftcard();
                     $giftcard->estado = 'DISPONIBLE';
                     $giftcard->codigo = $this->random(10);
@@ -103,17 +104,15 @@ class PedidoController extends Controller
                 } else {
                     // SUSCRIPCION
                     $delivery = new Delivery();
+                    $delivery->fecha_de_inicio = date("Y-m-d H:i:s");
                     $delivery->nombres = $request->envio['remitente_nombres'];
                     $delivery->email = $request->envio['remitente_email'];
                     $delivery->celular = $request->envio['remitente_telefono'];
                     $delivery->direccion = $request->envio['remitente_nombres'];
                     $delivery->distrito = $request->envio['remitente_nombres'];
                     $delivery->referencia = $request->envio['remitente_nombres'];
+                    $delivery->suscripcion_pagada_id = $suscripcion_pagada->id;
                     $delivery->save();
-
-                    $suscripcion_pagada->fecha_de_inicio = date("Y-m-d H:i:s");
-                    $suscripcion_pagada->delivery_id = $delivery->id;
-                    $suscripcion_pagada->save();
                 }
             }
 

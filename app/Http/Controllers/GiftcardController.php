@@ -84,7 +84,7 @@ class GiftcardController extends Controller
         $suscripcion = SuscripcionPagada::find($giftcard->suscripcion_pagada_id);
         $pedido = Pedido::find($suscripcion->pedido_id, ['estado']);
 
-        if ($suscripcion->fecha_de_inicio)
+        if ($giftcard->estado === 'CANJEADO')
             return response(['error' => "Giftcard anteriormente canjeado."], 409);
 
         if ($pedido->estado === 'PENDIENTE')
@@ -93,34 +93,28 @@ class GiftcardController extends Controller
         if ($pedido->estado === 'CANCELADA')
             return response(['error' => "Compra de giftcard ha sido cancelada"], 409);
 
-        DB::transaction(function () use ($request, $suscripcion, $giftcard) {
+        $delivery = DB::transaction(function () use ($request, $suscripcion, $giftcard) {
             $delivery = new Delivery();
+            $delivery->meses = $giftcard["meses"];
+            $delivery->fecha_de_inicio = date("Y-m-d H:i:s");
             $delivery->direccion = $request->envio['direccion'];
             $delivery->distrito = $request->envio['distrito'];
             $delivery->referencia = $request->envio['referencia'];
             $delivery->nombres = $request->envio['remitente_nombres'];
             $delivery->email = $request->envio['remitente_email'];
             $delivery->celular = $request->envio['remitente_telefono'];
+            $delivery->suscripcion_pagada_id = $suscripcion->id;
             $delivery->save();
-
-            $suscripcion->delivery_id = $delivery->id;
-            $suscripcion->fecha_de_inicio = date("Y-m-d H:i:s");
-            $suscripcion->save();
 
             $giftcard->estado = 'CANJEADO';
             $giftcard->save();
+
+            return $delivery;
         });
 
         return response([
             'message' => "SuscripcionPagada canjeado con éxito.",
-            'data' => SuscripcionPagada::find($giftcard->id, [
-                'id',
-                'fecha_de_inicio',
-                'meses',
-                'precio',
-                'delivery_id',
-                'plan_id'
-            ])
+            'data' => Delivery::find($delivery->id)
         ], 200);
 
     }

@@ -2,11 +2,10 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\DB;
-use App\SuscripcionPagada;
+use App\Producto;
 use Illuminate\Http\Request;
 
-class SuscripcionPagadaController extends Controller
+class ProductoController extends Controller
 {
     /**
      * Display a listing of the resource.
@@ -15,12 +14,17 @@ class SuscripcionPagadaController extends Controller
      */
     public function index()
     {
-        $suscripciones_pagadas = SuscripcionPagada::whereHas('pedido', function ($query) {
-            $query->where('estado', 'CONFIRMADA');
-        })->get();
-//        })->whereNotNull('fecha_de_inicio')->get();
+        //
+    }
 
-        return response($suscripciones_pagadas, 200);
+    /**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create()
+    {
+        //
     }
 
     /**
@@ -37,22 +41,33 @@ class SuscripcionPagadaController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\SuscripcionPagada  $suscripcion_pagada
+     * @param  \App\Producto  $producto
      * @return \Illuminate\Http\Response
      */
-    public function show(SuscripcionPagada $suscripcion_pagada)
+    public function show(Producto $producto)
     {
-        return response($suscripcion_pagada, 200);
+        //
+    }
+
+    /**
+     * Show the form for editing the specified resource.
+     *
+     * @param  \App\Producto  $producto
+     * @return \Illuminate\Http\Response
+     */
+    public function edit(Producto $producto)
+    {
+        //
     }
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\SuscripcionPagada  $suscipcion_pagada
+     * @param  \App\Producto  $producto
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, SuscripcionPagada $suscripcion_pagada)
+    public function update(Request $request, Producto $producto)
     {
         //
     }
@@ -60,10 +75,10 @@ class SuscripcionPagadaController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\SuscripcionPagada  $suscripcion_pagada
+     * @param  \App\Producto  $producto
      * @return \Illuminate\Http\Response
      */
-    public function destroy(SuscripcionPagada $suscripcion_pagada)
+    public function destroy(Producto $producto)
     {
         //
     }
