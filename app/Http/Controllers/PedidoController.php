@@ -22,7 +22,9 @@ class PedidoController extends Controller
      */
     public function index()
     {
-        $pedidos = Pedido::all();
+        $pedidos = Pedido::with(['cliente', 'cupon', 'factura'])
+            ->orderByDesc("id")
+            ->get();
         return response($pedidos, 200);
     }
 

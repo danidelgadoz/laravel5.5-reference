@@ -18,11 +18,14 @@ class GiftcardController extends Controller
      */
     public function index()
     {
-        $giftcards = Giftcard::whereHas('pedido_detalle', function ($query) {
-            $query->whereHas('pedido', function ($query) {
-                $query->where('estado', 'CONFIRMADA');
-            });
-        })->get();
+//        $giftcards = Giftcard::whereHas('pedido_detalle', function ($query) {
+//            $query->whereHas('pedido', function ($query) {
+//                $query->where('estado', 'CONFIRMADA');
+//            });
+//        })->orderBy('id', 'desc')
+//            ->get();
+
+        $giftcards = Giftcard::orderByDesc("id")->get();
 
         return response($giftcards, 200);
     }

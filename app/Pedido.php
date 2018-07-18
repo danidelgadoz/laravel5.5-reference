@@ -13,11 +13,20 @@ class Pedido extends Model
     public $timestamps = true;
     protected $dates = ['deleted_at'];
     protected $guarded = ['id',"deleted_at","created_at","updated_at"];
-    protected $with = ['cliente', 'cupon', 'factura'];//, 'suscripciones'];
+//    protected $with = ['cliente', 'cupon', 'factura'];
 
     public function cliente()
     {
-        return $this->hasOne('App\Cliente', 'id', 'cliente_id');
+        return $this->hasOne('App\Cliente', 'id', 'cliente_id')
+            ->select([
+                'id',
+                'first_name',
+                'last_name',
+                'address',
+                'address_city',
+                'country_code',
+                'phone_number'
+            ]);
     }
 
     public function factura()
@@ -28,10 +37,5 @@ class Pedido extends Model
     public function cupon()
     {
         return $this->hasOne('App\Cupon', 'id', 'cupon_id');
-    }
-
-    public function suscripciones()
-    {
-        return $this->hasMany('App\SuscripcionPagada', 'compra_id', 'id');
     }
 }

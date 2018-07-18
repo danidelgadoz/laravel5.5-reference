@@ -17,8 +17,8 @@ class PedidoDetalleController extends Controller
     {
         $pedidos_detalles = PedidoDetalle::whereHas('pedido', function ($query) {
 //            $query->where('estado', 'CONFIRMADA');
-        })->get();
-//        })->whereNotNull('fecha_de_inicio')->get();
+        })->orderBy('id', 'desc')
+            ->get();
 
         return response($pedidos_detalles, 200);
     }

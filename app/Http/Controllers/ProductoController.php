@@ -14,17 +14,8 @@ class ProductoController extends Controller
      */
     public function index()
     {
-        //
-    }
-
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
+        $producto = Producto::orderByDesc("id")->get();
+        return response($producto, 200);
     }
 
     /**
@@ -35,7 +26,16 @@ class ProductoController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $producto = new Producto;
+        $producto->codigo = $request->codigo;
+        $producto->suscripcion_interval = $request->suscripcion_interval;
+        $producto->suscripcion_interval_count = $request->suscripcion_interval_count;
+        $producto->nombre = $request->nombre;
+        $producto->currency_code = $request->currency_code;
+        $producto->precio = $request->precio;
+        $producto->save();
+
+        return response($producto, 201);
     }
 
     /**
@@ -46,18 +46,7 @@ class ProductoController extends Controller
      */
     public function show(Producto $producto)
     {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Producto  $producto
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Producto $producto)
-    {
-        //
+        return response($producto, 200);
     }
 
     /**
@@ -69,7 +58,15 @@ class ProductoController extends Controller
      */
     public function update(Request $request, Producto $producto)
     {
-        //
+        $producto->codigo = $request->codigo;
+        $producto->suscripcion_interval = $request->suscripcion_interval;
+        $producto->suscripcion_interval_count = $request->suscripcion_interval_count;
+        $producto->nombre = $request->nombre;
+        $producto->currency_code = $request->currency_code;
+        $producto->precio = $request->precio;
+        $producto->save();
+
+        return response($producto, 200);
     }
 
     /**
@@ -80,6 +77,12 @@ class ProductoController extends Controller
      */
     public function destroy(Producto $producto)
     {
-        //
+        $producto->delete();
+
+        return response([
+            'id'=> $producto->id,
+            'deleted'=> true,
+            'message' => "Se eliminó el producto con ID ${producto['id']} exitosamente."
+        ], 200);
     }
 }

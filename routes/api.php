@@ -20,17 +20,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 Route::apiResource('cliente', 'ClienteController');
 Route::apiResource('cupon', 'CuponController');
 Route::apiResource('factura', 'FacturaController');
-//Route::apiResource('culqi_suscripcion', 'CulqiSuscripcionController');
 Route::apiResource('pedido', 'PedidoController');
 Route::apiResource('suscripcion', 'SuscripcionController');
 Route::apiResource('pedido_detalle', 'PedidoDetalleController');
 Route::apiResource('contacto-log', 'ContactoLogController');
 Route::apiResource('mailing-suscripcion', 'MailingSuscripcionController');
 Route::apiResource('reclamacion', 'ReclamacionController');
-
-//Route::get('suscripcion/{suscripcion}/confirm', 'SuscripcionController@confirm');
-//Route::get('suscripcion/{suscripcion}/cancel', 'SuscripcionController@cancel');
-//Route::get('suscripcion/export/excel', 'SuscripcionController@export');
+Route::apiResource('producto', 'ProductoController');
 
 Route::post('pedido/giftcard', 'PedidoController@giftcard');
 Route::put('pedido/{pedido}/confirm', 'PedidoController@confirm');

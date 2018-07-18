@@ -11,23 +11,34 @@ class PedidoDetalle extends Model
     protected $guarded = ['id',"deleted_at","created_at","updated_at"];
     protected $with = ['pedido', 'producto'];
 
-    public function plan()
-    {
-        return $this->hasOne('App\Plan', 'id', 'plan_id');
-    }
-
-    public function suscripcion()
-    {
-        return $this->hasOne('App\Suscripcion', 'id', 'suscripcion_id');
-    }
-
     public function pedido()
     {
-        return $this->hasOne('App\Pedido', 'id', 'pedido_id');
+        return $this->hasOne('App\Pedido', 'id', 'pedido_id')
+            ->select([
+                'id',
+                'producto',
+                'tipo_de_pago',
+                'estado',
+                'precio',
+                'currency_code',
+                'cliente_id',
+                'factura_id',
+                'cupon_id'
+            ]);
     }
 
     public function producto()
     {
-        return $this->hasOne('App\Producto', 'id', 'producto_id');
+        return $this->hasOne('App\Producto', 'id', 'producto_id')
+            ->select([
+                'id',
+                'codigo',
+                'suscripcion_interval',
+                'suscripcion_interval_count',
+                'nombre',
+                'currency_code',
+                'precio',
+                'descripcion'
+            ]);
     }
 }

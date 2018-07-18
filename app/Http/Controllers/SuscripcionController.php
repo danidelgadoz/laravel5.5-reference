@@ -14,7 +14,7 @@ class SuscripcionController extends Controller
      */
     public function index()
     {
-        $suscripciones = Suscripcion::all();
+        $suscripciones = Suscripcion::orderByDesc("id")->get();
         return response($suscripciones, 200);
     }
 
