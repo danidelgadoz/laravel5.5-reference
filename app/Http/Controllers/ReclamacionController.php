@@ -14,7 +14,7 @@ class ReclamacionController extends Controller
      */
     public function index()
     {
-        $reclamaciones = Reclamacion::all();
+        $reclamaciones = Reclamacion::orderByDesc("id")->get();
         return response($reclamaciones, 200);
     }
 

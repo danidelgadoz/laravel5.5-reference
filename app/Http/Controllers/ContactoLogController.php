@@ -16,7 +16,7 @@ class ContactoLogController extends Controller
      */
     public function index()
     {
-        $cupon = ContactoLog::all();
+        $cupon = ContactoLog::orderByDesc("id")->get();
         return response($cupon, 200);
     }
 

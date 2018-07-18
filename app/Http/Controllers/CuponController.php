@@ -14,7 +14,7 @@ class CuponController extends Controller
      */
     public function index()
     {
-        $cupon = Cupon::all();
+        $cupon = Cupon::orderByDesc("id")->get();
         return response($cupon, 200);
     }
 

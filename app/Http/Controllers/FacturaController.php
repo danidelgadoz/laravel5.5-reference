@@ -14,7 +14,7 @@ class FacturaController extends Controller
      */
     public function index()
     {
-        $facturas = Factura::all();
+        $facturas = Factura::orderByDesc("id")->get();
         return response($facturas, 200);
     }
 

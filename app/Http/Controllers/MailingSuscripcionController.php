@@ -14,7 +14,7 @@ class MailingSuscripcionController extends Controller
      */
     public function index()
     {
-        $mailingSuscripcion = MailingSuscripcion::all();
+        $mailingSuscripcion = MailingSuscripcion::orderByDesc("id")->get();
         return response($mailingSuscripcion, 200);
     }
 
