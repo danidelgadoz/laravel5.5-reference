@@ -9,7 +9,7 @@ class PedidoDetalle extends Model
     protected $table = 'pedido_detalle';
     public $timestamps = true;
     protected $guarded = ['id',"deleted_at","created_at","updated_at"];
-    protected $with = ['pedido', 'producto'];
+    protected $with = ['producto'];
 
     public function pedido()
     {

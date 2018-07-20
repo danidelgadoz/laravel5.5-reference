@@ -11,7 +11,9 @@ use App\PedidoDetalle;
 use App\Giftcard;
 use App\Factura;
 use App\Suscripcion;
+use App\Mail\PedidoNuevoMailing;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 class PedidoController extends Controller
 {
@@ -22,7 +24,7 @@ class PedidoController extends Controller
      */
     public function index()
     {
-        $pedidos = Pedido::with(['cliente', 'cupon', 'factura'])
+        $pedidos = Pedido::with(['cliente', 'cupon', 'factura', 'detalles'])
             ->orderByDesc("id")
             ->get();
         return response($pedidos, 200);
@@ -110,9 +112,9 @@ class PedidoController extends Controller
                     $suscripcion->nombres = $request->envio['remitente_nombres'];
                     $suscripcion->email = $request->envio['remitente_email'];
                     $suscripcion->celular = $request->envio['remitente_telefono'];
-                    $suscripcion->direccion = $request->envio['remitente_nombres'];
-                    $suscripcion->distrito = $request->envio['remitente_nombres'];
-                    $suscripcion->referencia = $request->envio['remitente_nombres'];
+                    $suscripcion->direccion = $request->envio['direccion'];
+                    $suscripcion->distrito = $request->envio['distrito'];
+                    $suscripcion->referencia = $request->envio['referencia'];
                     $suscripcion->pedido_detalle_id = $pedido_detalle->id;
                     $suscripcion->save();
                 }
@@ -121,10 +123,17 @@ class PedidoController extends Controller
             return $pedido;
         });
 
-        return response([
-            'id' => $pedido->id,
-            'message' => "Registro de pedido exitoso.",
-        ], 201);
+        $pedidoForMailing = Pedido::with([
+            'cliente',
+            'factura',
+            'detalles'
+        ])->find($pedido->id);
+
+//        return view('email.pedidonuevo')->with(['pedido' => $pedidoForMailing, 'envio' => $request->envio]);
+
+        Mail::send(new PedidoNuevoMailing($pedidoForMailing, $request->envio));
+
+        return response($pedidoForMailing, 201);
     }
 
     /**
@@ -133,8 +142,15 @@ class PedidoController extends Controller
      * @param  \App\Pedido  $pedido
      * @return \Illuminate\Http\Response
      */
-    public function show(Pedido $pedido)
+    public function show($id)
     {
+        $pedido = Pedido::with([
+            'cliente',
+            'cupon',
+            'factura',
+            'detalles'
+        ])->find($id);
+
         return response($pedido, 200);
     }
 

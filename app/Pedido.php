@@ -38,4 +38,17 @@ class Pedido extends Model
     {
         return $this->hasOne('App\Cupon', 'id', 'cupon_id');
     }
+
+    public function detalles()
+    {
+        return $this->hasMany('App\PedidoDetalle', 'pedido_id', 'id')
+            ->select([
+                'id',
+                'precio_unitario',
+                'cantidad',
+                'total',
+                'producto_id',
+                'pedido_id',
+            ]);
+    }
 }

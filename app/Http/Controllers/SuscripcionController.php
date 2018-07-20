@@ -14,7 +14,18 @@ class SuscripcionController extends Controller
      */
     public function index()
     {
-        $suscripciones = Suscripcion::orderByDesc("id")->get();
+        $suscripciones = Suscripcion
+            ::with(['pedido_detalle' => function ($query) {
+                $query->with(['pedido']);
+            }])
+//            ->whereHas('pedido_detalle', function ($query) {
+//                $query->whereHas('pedido', function ($query) {
+//                    $query->where('estado', 'CONFIRMADA');
+//                });
+//            })
+            ->orderByDesc("id")
+            ->get();
+
         return response($suscripciones, 200);
     }
 
@@ -45,9 +56,15 @@ class SuscripcionController extends Controller
      * @param  \App\Suscripcion  $suscripcion
      * @return \Illuminate\Http\Response
      */
-    public function show(Suscripcion $suscripcion)
+    public function show($id)
     {
-        //
+        $suscripcion = Suscripcion
+            ::with(['pedido_detalle' => function ($query) {
+                $query->with(['pedido']);
+            }])
+            ->find($id);
+
+        return response($suscripcion, 200);
     }
 
     /**

@@ -15,9 +15,8 @@ class PedidoDetalleController extends Controller
      */
     public function index()
     {
-        $pedidos_detalles = PedidoDetalle::whereHas('pedido', function ($query) {
-//            $query->where('estado', 'CONFIRMADA');
-        })->orderBy('id', 'desc')
+        $pedidos_detalles = PedidoDetalle::with(['pedido'])
+            ->orderBy('id', 'desc')
             ->get();
 
         return response($pedidos_detalles, 200);
@@ -40,8 +39,12 @@ class PedidoDetalleController extends Controller
      * @param  \App\PedidoDetalle  $pedido_detalle
      * @return \Illuminate\Http\Response
      */
-    public function show(PedidoDetalle $pedido_detalle)
+    public function show($id)
     {
+        $pedido_detalle = PedidoDetalle::with([
+            'pedido',
+        ])->find($id);
+
         return response($pedido_detalle, 200);
     }
 

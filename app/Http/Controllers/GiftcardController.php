@@ -25,7 +25,12 @@ class GiftcardController extends Controller
 //        })->orderBy('id', 'desc')
 //            ->get();
 
-        $giftcards = Giftcard::orderByDesc("id")->get();
+        $giftcards = Giftcard
+            ::with(['pedido_detalle' => function ($query) {
+                $query->with(['pedido']);
+            }])
+            ->orderByDesc("id")
+            ->get();
 
         return response($giftcards, 200);
     }
@@ -36,8 +41,14 @@ class GiftcardController extends Controller
      * @param  \App\Giftcard  $giftcard
      * @return \Illuminate\Http\Response
      */
-    public function show(Giftcard $giftcard)
+    public function show($id)
     {
+        $giftcard = Giftcard
+            ::with(['pedido_detalle' => function ($query) {
+                $query->with(['pedido']);
+            }])
+            ->find($id);
+
         return response($giftcard, 200);
     }
 
@@ -55,7 +66,7 @@ class GiftcardController extends Controller
 
     public function getByPedido($id)
     {
-        $giftcards = Giftcard::whereHas('pedido_detalle_id', function ($query) use ($id) {
+        $giftcards = Giftcard::whereHas('pedido_detalle', function ($query) use ($id) {
             $query->where('pedido_id', $id);
         })->get();
 
