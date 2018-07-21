@@ -38,6 +38,8 @@ Route::post('giftcard/validar', 'GiftcardController@validar');
 Route::put('giftcard/canjear', 'GiftcardController@canjear');
 Route::get('giftcard/pedido/{pedido}', 'GiftcardController@getByPedido');
 
+Route::get('/suscripcion/export/excel', 'SuscripcionController@export');
+
 Route::prefix('admin')->middleware('auth:api')->group(function () {
     Route::apiResource('plan', 'PlanController');
 });
