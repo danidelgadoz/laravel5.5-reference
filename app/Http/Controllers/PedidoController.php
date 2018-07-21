@@ -12,6 +12,7 @@ use App\Giftcard;
 use App\Factura;
 use App\Suscripcion;
 use App\Mail\PedidoNuevoMailing;
+use App\Mail\GiftcardMailing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -96,6 +97,8 @@ class PedidoController extends Controller
                     $giftcard = new Giftcard();
                     $giftcard->estado = 'DISPONIBLE';
                     $giftcard->codigo = $this->random(10);
+                    $giftcard->mailing_owner_address = isset($pd['mailing_owner_address']) ? $pd['mailing_owner_address'] : null;
+                    $giftcard->mailign_owner_name = isset($pd['mailign_owner_name']) ? $pd['mailign_owner_name'] : null;
                     $giftcard->remitente_nombres = $request->envio['remitente_nombres'];
                     $giftcard->remitente_email = $request->envio['remitente_email'];
                     $giftcard->remitente_telefono = $request->envio['remitente_telefono'];
@@ -104,6 +107,9 @@ class PedidoController extends Controller
                     $giftcard->entrega_referencia = $request->envio['referencia'];
                     $giftcard->pedido_detalle_id = $pedido_detalle->id;
                     $giftcard->save();
+
+                    if ($giftcard->mailing_owner_address)
+                        Mail::send(new GiftcardMailing($giftcard));
 
                 } else {
                     // SUSCRIPCION

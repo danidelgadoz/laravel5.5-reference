@@ -22,6 +22,7 @@ class Pedido extends Model
                 'id',
                 'first_name',
                 'last_name',
+                'email',
                 'address',
                 'address_city',
                 'country_code',

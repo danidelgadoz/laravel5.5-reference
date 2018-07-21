@@ -27,7 +27,9 @@ class GiftcardController extends Controller
 
         $giftcards = Giftcard
             ::with(['pedido_detalle' => function ($query) {
-                $query->with(['pedido']);
+                $query->with(['pedido' => function ($query) {
+                    $query->with(['cliente', 'factura']);
+                }]);
             }])
             ->orderByDesc("id")
             ->get();
@@ -45,7 +47,9 @@ class GiftcardController extends Controller
     {
         $giftcard = Giftcard
             ::with(['pedido_detalle' => function ($query) {
-                $query->with(['pedido']);
+                $query->with(['pedido' => function ($query) {
+                    $query->with(['cliente', 'factura']);
+                }]);
             }])
             ->find($id);
 

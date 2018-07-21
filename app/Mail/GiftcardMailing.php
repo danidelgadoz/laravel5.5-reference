@@ -2,28 +2,26 @@
 
 namespace App\Mail;
 
-use App\Pedido;
+use App\Giftcard;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class PedidoNuevoMailing extends Mailable
+class GiftcardMailing extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $pedido;
-    public $envio;
+    public $giftcard;
 
     /**
      * Create a new message instance.
      *
      * @return void
      */
-    public function __construct(Pedido $pedido, $envio)
+    public function __construct(Giftcard $giftcard)
     {
-        $this->pedido = $pedido;
-        $this->envio = $envio;
+        $this->giftcard = $giftcard;
     }
 
     /**
@@ -34,9 +32,8 @@ class PedidoNuevoMailing extends Mailable
     public function build()
     {
         return $this->from('ventas@craftimes.com', 'Craftimes Ventas')
-                    ->to($this->pedido->cliente['email'])
-                    ->cc(['prueba1@craftimes.com', 'prueba2@craftimes.com'])
-                    ->subject('Craftimes: Nuevo pedido')
-                    ->view('email.pedidonuevo');
+                    ->to($this->giftcard->mailing_owner_address)
+                    ->subject('Craftimes: canjea tu giftcard')
+                    ->view('email.giftcard');
     }
 }

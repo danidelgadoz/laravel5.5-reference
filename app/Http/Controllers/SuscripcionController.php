@@ -17,7 +17,7 @@ class SuscripcionController extends Controller
         $suscripciones = Suscripcion
             ::with(['pedido_detalle' => function ($query) {
                 $query->with(['pedido' => function ($query) {
-                    $query->with(['cliente']);
+                    $query->with(['cliente', 'factura']);
                 }]);
             }])
 //            ->whereHas('pedido_detalle', function ($query) {
@@ -63,7 +63,7 @@ class SuscripcionController extends Controller
         $suscripcion = Suscripcion
             ::with(['pedido_detalle' => function ($query) {
                 $query->with(['pedido' => function ($query) {
-                    $query->with(['cliente']);
+                    $query->with(['cliente', 'factura']);
                 }]);
             }])
             ->find($id);
