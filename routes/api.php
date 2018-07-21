@@ -41,3 +41,11 @@ Route::get('giftcard/pedido/{pedido}', 'GiftcardController@getByPedido');
 Route::prefix('admin')->middleware('auth:api')->group(function () {
     Route::apiResource('plan', 'PlanController');
 });
+
+Route::get('env', function () {
+    $env = [
+        'MAIL_HOST' => env('MAIL_HOST'),
+        'CRAFTIMES_EMAIL_CONTACTO' => env('CRAFTIMES_EMAIL_CONTACTO')
+    ];
+    dd($env) ;
+});
