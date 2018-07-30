@@ -34,13 +34,16 @@ class NoticiaController extends Controller
      */
     public function store(Request $request)
     {
+        $images_list_json = $this->uploadManyFiles($request, 'images_list');
+        $feature_image_path = $this->uploadOneFile($request, 'feature_image');
+
         $noticia = new Noticia();
         $noticia->publicado = $request->publicado;
         $noticia->titulo = $request->titulo;
         $noticia->inner_html = $request->inner_html;
         $noticia->featured = $request->featured;
-        $noticia->feature_image = $this->uploadManyFiles($request, 'images_list');
-        $noticia->images_list = $this->uploadOneFile($request, 'feature_image');
+        $noticia->feature_image = $feature_image_path;
+        $noticia->images_list = $images_list_json;
         $noticia->save();
 
         $noticia->images_list = $noticia->images_list ? json_decode($noticia->images_list) : null;
