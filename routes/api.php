@@ -27,6 +27,7 @@ Route::apiResource('contacto-log', 'ContactoLogController');
 Route::apiResource('mailing-suscripcion', 'MailingSuscripcionController');
 Route::apiResource('reclamacion', 'ReclamacionController');
 Route::apiResource('producto', 'ProductoController');
+Route::apiResource('noticia', 'NoticiaController');
 
 Route::post('pedido/giftcard', 'PedidoController@giftcard');
 Route::put('pedido/{pedido}/confirm', 'PedidoController@confirm');

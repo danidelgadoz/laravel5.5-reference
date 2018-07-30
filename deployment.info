@@ -72,3 +72,6 @@ OAUTH IMPLEMETATION:
 
 Excel implementation:
     - composer require maatwebsite/excel:~2.1
+
+Storage implementation:
+    - php artisan storage:link
