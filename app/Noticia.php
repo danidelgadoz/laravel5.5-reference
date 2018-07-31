@@ -24,4 +24,14 @@ class Noticia extends Model
                 'descripcion'
             ]);
     }
+
+    public function imagenes()
+    {
+        return $this->hasMany('App\NoticiaImagen', 'noticia_id', 'id')
+            ->select([
+                'id',
+                'url',
+                'noticia_id',
+            ]);
+    }
 }

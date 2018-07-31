@@ -27,9 +27,9 @@ Route::apiResource('contacto-log', 'ContactoLogController');
 Route::apiResource('mailing-suscripcion', 'MailingSuscripcionController');
 Route::apiResource('reclamacion', 'ReclamacionController');
 Route::apiResource('producto', 'ProductoController');
-Route::apiResource('noticia', 'NoticiaController');
+Route::apiResource('noticia', 'NoticiaController', ['parameters' => ['noticia' => 'noticia']]);
 Route::apiResource('categoria', 'CategoriaController', ['parameters' => ['categoria' => 'categoria']]);
-
+Route::apiResource('noticia_imagen', 'NoticiaImagenController');
 
 Route::post('pedido/giftcard', 'PedidoController@giftcard');
 Route::put('pedido/{pedido}/confirm', 'PedidoController@confirm');

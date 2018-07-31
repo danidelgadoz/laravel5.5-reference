@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Noticia;
+use App\NoticiaImagen;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Storage;
 
 class NoticiaController extends Controller
@@ -16,13 +18,10 @@ class NoticiaController extends Controller
      */
     public function index()
     {
-        $noticias = Noticia
-            ::orderByDesc("id")
-            ->get()
-            ->map(function ($item) {
-                $item->images_list = json_decode($item->images_list);
-                return collect($item->toArray());
-            });
+        $noticias = Noticia::with(['imagenes'])
+            ->orderByDesc("id")
+            ->get();
+
         return response($noticias, 200);
     }
 
@@ -34,21 +33,34 @@ class NoticiaController extends Controller
      */
     public function store(Request $request)
     {
-        $images_list_json = $this->uploadManyFiles($request, 'images_list');
+        $images_list_array = $this->uploadManyFiles($request, 'images_list');
         $feature_image_path = $this->uploadOneFile($request, 'feature_image');
 
-        $noticia = new Noticia();
-        $noticia->publicado = $request->publicado;
-        $noticia->titulo = $request->titulo;
-        $noticia->inner_html = $request->inner_html;
-        $noticia->featured = $request->featured;
-        $noticia->feature_image = $feature_image_path;
-        $noticia->images_list = $images_list_json;
-        $noticia->save();
+        $noticia = DB::transaction(function () use ($request, $images_list_array, $feature_image_path) {
+            $noticia = new Noticia();
+            $noticia->publicado = $request->publicado;
+            $noticia->titulo = $request->titulo;
+            $noticia->inner_html = $request->inner_html;
+            $noticia->featured = $request->featured;
+            $noticia->feature_image = $feature_image_path;
+            $noticia->categoria_id = $request->categoria_id;
+            $noticia->save();
 
-        $noticia->images_list = $noticia->images_list ? json_decode($noticia->images_list) : null;
+            foreach ($images_list_array as $imagen) {
+                $noticia_imagen = new NoticiaImagen();
+                $noticia_imagen->url = $imagen;
+                $noticia_imagen->noticia_id = $noticia->id;
+                $noticia_imagen->save();
+            }
 
-        return response($noticia, 201);
+            return $noticia;
+        });
+
+        $noticia_response = Noticia::with([
+            'imagenes'
+        ])->findOrFail($noticia->id);
+
+        return response($noticia_response, 201);
     }
 
     /**
@@ -59,8 +71,10 @@ class NoticiaController extends Controller
      */
     public function show($id)
     {
-        $noticia = Noticia::findOrFail($id);
-        $noticia->images_list = json_decode($noticia->images_list);
+        $noticia = Noticia::with([
+            'imagenes'
+        ])->findOrFail($id);
+
         return response($noticia, 200);
     }
 
@@ -71,10 +85,23 @@ class NoticiaController extends Controller
      * @param  \App\Noticia  $noticia
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(Request $request, Noticia $noticia)
     {
-        $noticia = Noticia::findOrFail($id);
-        return response($noticia, 200);
+        $feature_image_path = $this->uploadOneFile($request, 'feature_image');
+
+        $noticia->publicado = $request->publicado;
+        $noticia->titulo = $request->titulo;
+        $noticia->inner_html = $request->inner_html;
+        $noticia->featured = $request->featured;
+        $noticia->feature_image = $feature_image_path ? $feature_image_path : null;
+        $noticia->categoria_id = $request->categoria_id;
+        $noticia->save();
+
+        $noticia_response = Noticia::with([
+            'imagenes'
+        ])->findOrFail($noticia->id);
+
+        return response($noticia_response, 200);
     }
 
     /**
@@ -118,7 +145,7 @@ class NoticiaController extends Controller
                 $path = $file->store($this->storagePath);
                 array_push($array_images, url(Storage::url($path)));
             }
-            return json_encode($array_images);
+            return $array_images;
         }
         return null;
     }
