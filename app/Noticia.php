@@ -13,4 +13,15 @@ class Noticia extends Model
     public $timestamps = true;
     protected $dates = ['deleted_at'];
     protected $guarded = ['id',"deleted_at","created_at","updated_at"];
+//    protected $with = ['categoria'];
+
+    public function categoria()
+    {
+        return $this->hasOne('App\Categoria', 'id', 'categoria_id')
+            ->select([
+                'id',
+                'nombre',
+                'descripcion'
+            ]);
+    }
 }
