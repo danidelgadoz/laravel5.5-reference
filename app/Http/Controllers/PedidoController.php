@@ -15,6 +15,7 @@ use App\Mail\PedidoNuevoMailing;
 use App\Mail\GiftcardMailing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use Log;
 
 class PedidoController extends Controller
 {
@@ -252,5 +253,13 @@ class PedidoController extends Controller
         }
 
         return substr(str_replace(array('/', '+', '='), '', base64_encode($bytes)), 0, $length);
+    }
+
+    public function payuConfirmation(Request $request)
+    {
+        Log::info('New post request from PayU');
+        $data = $_POST;
+        Log::info($data);
+        return response(null, 200);
     }
 }

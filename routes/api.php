@@ -31,6 +31,7 @@ Route::apiResource('noticia', 'NoticiaController', ['parameters' => ['noticia' =
 Route::apiResource('categoria', 'CategoriaController', ['parameters' => ['categoria' => 'categoria']]);
 Route::apiResource('noticia_imagen', 'NoticiaImagenController');
 
+Route::post('payu/confirmacion', 'PedidoController@payuConfirmation');
 Route::post('pedido/giftcard', 'PedidoController@giftcard');
 Route::put('pedido/{pedido}/confirm', 'PedidoController@confirm');
 Route::put('pedido/{pedido}/cancel', 'PedidoController@cancel');
