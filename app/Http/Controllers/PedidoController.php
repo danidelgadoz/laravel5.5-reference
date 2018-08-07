@@ -258,8 +258,16 @@ class PedidoController extends Controller
     public function payuConfirmation(Request $request)
     {
         Log::info('New post request from PayU');
-        $data = $_POST;
-        Log::info($data);
+        Log::info($_POST);
+
+        DB::transaction(function () use ($_POST) {
+            $pedido = Pedido::findOrFail($_POST["reference_sale"]);
+            $pedido->estado = 'CONFIRMADA';
+            $pedido->save();
+
+            return $pedido;
+        });
+
         return response(null, 200);
     }
 }
