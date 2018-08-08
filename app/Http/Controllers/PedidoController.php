@@ -40,9 +40,6 @@ class PedidoController extends Controller
      */
     public function store(Request $request)
     {
-        if ($request->tipo_de_pago === 'TARJETA')
-            return response(['error' => "Pago por tarjeta crédito/débito no disponible"], 409);
-
         $pedido = DB::transaction(function () use ($request) {
             $cliente = Cliente::where('email', $request->cliente['email'])->first();
 
@@ -52,6 +49,15 @@ class PedidoController extends Controller
                 $cliente->first_name = $request->cliente['first_name'];
                 $cliente->last_name = $request->cliente['last_name'];
                 $cliente->email = $request->cliente['email'];
+                $cliente->address = $request->cliente['address'];
+                $cliente->address_city = $request->cliente['address_city'];
+                $cliente->country_code = $request->cliente['country_code'];
+                $cliente->phone_number = $request->cliente['phone_number'];
+                $cliente->save();
+            } else {
+                $cliente->card_number = null;
+                $cliente->first_name = $request->cliente['first_name'];
+                $cliente->last_name = $request->cliente['last_name'];
                 $cliente->address = $request->cliente['address'];
                 $cliente->address_city = $request->cliente['address_city'];
                 $cliente->country_code = $request->cliente['country_code'];
@@ -71,7 +77,7 @@ class PedidoController extends Controller
 
             $pedido = new Pedido();
             $pedido->tipo_de_pago = $request->tipo_de_pago;
-            $pedido->estado = 'PENDIENTE';
+            $pedido->estado = ($request->tipo_de_pago === 'TARJETA') ? 'PROCESANDO' : 'PENDIENTE';
             $pedido->precio = 0;
             $pedido->cliente_id = $cliente->id;
             $pedido->cupon_id = $request->cupon_id;
@@ -193,23 +199,17 @@ class PedidoController extends Controller
      */
     public function confirm(Request $request, Pedido $pedido)
     {
-        if ($pedido->estado !== 'PENDIENTE')
+        if ($pedido->estado === 'PROCESANDO')
+            return response(['error' => "El pedido esta siendo procesado en la plataforma de PayU"], 409);
+
+        if ($pedido->estado === 'CONFIRMADA' || $pedido->estado === 'CANCELADA')
             return response(['error' => "El pedido ya ha sido '{$pedido['estado']}'"], 409);
 
-        $pedido_actualizado = DB::transaction(function () use ($pedido) {
-//            PedidoDetalle::where('pedido_id', $pedido->id)
-//                ->update([
-//                    'fecha_de_inicio' => date("Y-m-d H:i:s")
-//                ]);
-
-            $pedido->estado = 'CONFIRMADA';
-            $pedido->save();
-
-            return $pedido;
-        });
+        $pedido->estado = 'CONFIRMADA';
+        $pedido->save();
 
         return response([
-            'message' => "Se ha actualizado el estado del pedido a '{$pedido_actualizado['estado']}'",
+            'message' => "Se ha actualizado el estado del pedido a '{$pedido['estado']}'",
         ], 200);
     }
 
@@ -222,12 +222,18 @@ class PedidoController extends Controller
      */
     public function cancel(Request $request, Pedido $pedido)
     {
-        if ($pedido->estado !== 'PENDIENTE')
+        if ($pedido->estado === 'PROCESANDO')
+            return response(['error' => "El pedido esta siendo procesado en la plataforma de PayU"], 409);
+
+        if ($pedido->estado === 'CONFIRMADA' || $pedido->estado === 'CANCELADA')
             return response(['error' => "El pedido ya ha sido '{$pedido['estado']}'"], 409);
 
         $pedido->estado = 'CANCELADA';
         $pedido->save();
-        return response($pedido, 200);
+
+        return response([
+            'message' => "Se ha actualizado el estado del pedido a '{$pedido['estado']}'",
+        ], 200);
     }
 
     /**
@@ -261,9 +267,12 @@ class PedidoController extends Controller
         Log::info($_POST);
 
         $data = $_POST;
+        $pedido = Pedido::findOrFail($data["reference_sale"]);
 
-        DB::transaction(function () use ($data) {
-            $pedido = Pedido::findOrFail($data["reference_sale"]);
+        if ($pedido->estado !== 'PROCESANDO')
+            return response(null, 409);
+
+        DB::transaction(function () use ($data, $pedido) {
             $pedido->estado = 'CONFIRMADA';
             $pedido->save();
         });
