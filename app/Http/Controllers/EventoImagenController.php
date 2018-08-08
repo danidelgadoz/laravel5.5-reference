@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers;
 
-use App\NoticiaImagen;
+use App\EventoImagen;
 use Illuminate\Http\Request;
 use Storage;
 
-class NoticiaImagenController extends Controller
+class EventoImagenController extends Controller
 {
-    public $storagePath = 'public/img/noticias';
+    public $storagePath = 'public/img/eventos';
 
     /**
      * Display a listing of the resource.
@@ -30,58 +30,57 @@ class NoticiaImagenController extends Controller
     {
         $feature_image_path = $this->uploadOneFile($request, 'imagen');
 
-        $noticiaImagen = new NoticiaImagen;
-        $noticiaImagen->noticia_id = $request->noticia_id;
-        $noticiaImagen->url = $feature_image_path;
-        $noticiaImagen->save();
+        $eventoImagen = new EventoImagen;
+        $eventoImagen->evento_id = $request->evento_id;
+        $eventoImagen->url = $feature_image_path;
+        $eventoImagen->save();
 
-        return response($noticiaImagen, 201);
+        return response($eventoImagen, 201);
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\NoticiaImagen  $noticiaImagen
+     * @param  \App\EventoImagen  $eventoImagen
      * @return \Illuminate\Http\Response
      */
-    public function show(NoticiaImagen $noticiaImagen)
+    public function show(EventoImagen $eventoImagen)
     {
-        return response($noticiaImagen, 200);
+        return response($eventoImagen, 200);
     }
-
 
     /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     * @param  \App\NoticiaImagen  $noticiaImagen
+     * @param  \App\EventoImagen  $eventoImagen
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, NoticiaImagen $noticiaImagen)
+    public function update(Request $request, EventoImagen $eventoImagen)
     {
         $feature_image_path = $this->uploadOneFile($request, 'imagen');
 
-        $noticiaImagen->noticia_id = $request->noticia_id;
-        $noticiaImagen->url = $feature_image_path;
-        $noticiaImagen->save();
+        $eventoImagen->evento_id = $request->evento_id;
+        $eventoImagen->url = $feature_image_path;
+        $eventoImagen->save();
 
-        return response($noticiaImagen, 200);
+        return response($eventoImagen, 200);
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\NoticiaImagen  $noticiaImagen
+     * @param  \App\EventoImagen  $eventoImagen
      * @return \Illuminate\Http\Response
      */
-    public function destroy(NoticiaImagen $noticiaImagen)
+    public function destroy(EventoImagen $eventoImagen)
     {
-        $noticiaImagen->delete();
+        $eventoImagen->delete();
 
         return response([
-            'id'=> $noticiaImagen->id,
+            'id'=> $eventoImagen->id,
             'deleted'=> true,
-            'message' => "Se eliminó la imagen con ID ${noticiaImagen['id']} exitosamente."
+            'message' => "Se eliminó el evento con ID ${eventoImagen['id']} exitosamente."
         ], 200);
     }
 

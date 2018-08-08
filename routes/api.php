@@ -27,9 +27,11 @@ Route::apiResource('contacto-log', 'ContactoLogController');
 Route::apiResource('mailing-suscripcion', 'MailingSuscripcionController');
 Route::apiResource('reclamacion', 'ReclamacionController');
 Route::apiResource('producto', 'ProductoController');
-Route::apiResource('noticia', 'NoticiaController', ['parameters' => ['noticia' => 'noticia']]);
 Route::apiResource('categoria', 'CategoriaController', ['parameters' => ['categoria' => 'categoria']]);
+Route::apiResource('noticia', 'NoticiaController', ['parameters' => ['noticia' => 'noticia']]);
 Route::apiResource('noticia_imagen', 'NoticiaImagenController');
+Route::apiResource('evento', 'EventoController');
+Route::apiResource('evento_imagen', 'EventoImagenController');
 Route::apiResource('payu_confirmacion', 'PayuConfirmacionController');
 
 Route::post('pedido/giftcard', 'PedidoController@giftcard');
@@ -49,6 +51,7 @@ Route::get('/suscripcion/export/excel', 'SuscripcionController@export');
 
 Route::get('noticia/filter/featured', 'NoticiaController@getFeatured');
 Route::get('noticia/{noticia}/relacionadas', 'NoticiaController@getRelated');
+Route::get('evento/{evento}/relacionadas', 'EventoController@getRelated');
 
 
 
