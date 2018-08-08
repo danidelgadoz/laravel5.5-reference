@@ -16,10 +16,13 @@ class NoticiaController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
+        $limit = $request->limit ? $request->limit : 1000;
+
         $noticias = Noticia::with(['imagenes'])
             ->orderByDesc("id")
+            ->limit($limit)
             ->get();
 
         return response($noticias, 200);
@@ -148,5 +151,30 @@ class NoticiaController extends Controller
             return $array_images;
         }
         return null;
+    }
+
+    public function getRelated(Request $request, Noticia $noticia)
+    {
+        $limit = $request->limit ? $request->limit : 1000;
+
+        $noticias = Noticia::where('categoria_id', $noticia->categoria_id)
+            ->where('id', '!=' , $noticia->id)
+            ->orderByDesc("id")
+            ->limit($limit)
+            ->get();
+
+        return response($noticias, 200);
+    }
+
+    public function getFeatured(Request $request)
+    {
+        $limit = $request->limit ? $request->limit : 1000;
+
+        $noticias = Noticia::where('featured', true)
+            ->orderByDesc("id")
+            ->limit($limit)
+            ->get();
+
+        return response($noticias, 200);
     }
 }

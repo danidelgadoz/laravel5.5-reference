@@ -32,7 +32,6 @@ Route::apiResource('categoria', 'CategoriaController', ['parameters' => ['catego
 Route::apiResource('noticia_imagen', 'NoticiaImagenController');
 Route::apiResource('payu_confirmacion', 'PayuConfirmacionController');
 
-Route::post('payu/confirmacion', 'PedidoController@payuConfirmation');
 Route::post('pedido/giftcard', 'PedidoController@giftcard');
 Route::put('pedido/{pedido}/confirm', 'PedidoController@confirm');
 Route::put('pedido/{pedido}/cancel', 'PedidoController@cancel');
@@ -42,9 +41,16 @@ Route::get('giftcard/{giftcard}', 'GiftcardController@show');
 Route::post('giftcard/validar', 'GiftcardController@validar');
 Route::put('giftcard/canjear', 'GiftcardController@canjear');
 Route::get('giftcard/pedido/{pedido}', 'GiftcardController@getByPedido');
+
+Route::post('payu/confirmacion', 'PedidoController@payuConfirmation');
 Route::get('payu_confirmacion/pedido/{pedido}', 'PayuConfirmacionController@getByPedido');
 
 Route::get('/suscripcion/export/excel', 'SuscripcionController@export');
+
+Route::get('noticia/filter/featured', 'NoticiaController@getFeatured');
+Route::get('noticia/{noticia}/relacionadas', 'NoticiaController@getRelated');
+
+
 
 Route::prefix('admin')->middleware('auth:api')->group(function () {
     Route::apiResource('plan', 'PlanController');
