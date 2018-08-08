@@ -30,6 +30,7 @@ Route::apiResource('producto', 'ProductoController');
 Route::apiResource('noticia', 'NoticiaController', ['parameters' => ['noticia' => 'noticia']]);
 Route::apiResource('categoria', 'CategoriaController', ['parameters' => ['categoria' => 'categoria']]);
 Route::apiResource('noticia_imagen', 'NoticiaImagenController');
+Route::apiResource('payu_confirmacion', 'PayuConfirmacionController');
 
 Route::post('payu/confirmacion', 'PedidoController@payuConfirmation');
 Route::post('pedido/giftcard', 'PedidoController@giftcard');
@@ -41,6 +42,7 @@ Route::get('giftcard/{giftcard}', 'GiftcardController@show');
 Route::post('giftcard/validar', 'GiftcardController@validar');
 Route::put('giftcard/canjear', 'GiftcardController@canjear');
 Route::get('giftcard/pedido/{pedido}', 'GiftcardController@getByPedido');
+Route::get('payu_confirmacion/pedido/{pedido}', 'PayuConfirmacionController@getByPedido');
 
 Route::get('/suscripcion/export/excel', 'SuscripcionController@export');
 

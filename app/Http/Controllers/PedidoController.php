@@ -11,6 +11,7 @@ use App\PedidoDetalle;
 use App\Giftcard;
 use App\Factura;
 use App\Suscripcion;
+use App\PayuConfirmacion;
 use App\Mail\PedidoNuevoMailing;
 use App\Mail\GiftcardMailing;
 use Illuminate\Http\Request;
@@ -275,6 +276,37 @@ class PedidoController extends Controller
         DB::transaction(function () use ($data, $pedido) {
             $pedido->estado = 'CONFIRMADA';
             $pedido->save();
+
+            $payu_confirmation = new PayuConfirmacion();
+            $payu_confirmation->transaction_date = !empty($_POST['transaction_date']) ? $_POST['transaction_date'] : null;
+            $payu_confirmation->cc_number = !empty($_POST['cc_number']) ? $_POST['cc_number'] : null;
+            $payu_confirmation->billing_country = !empty($_POST['billing_country']) ? $_POST['billing_country'] : null;
+            $payu_confirmation->bank_referenced_name = !empty($_POST['bank_referenced_name']) ? $_POST['bank_referenced_name'] : null;
+            $payu_confirmation->administrative_fee_tax = !empty($_POST['administrative_fee_tax']) ? $_POST['administrative_fee_tax'] : null;
+            $payu_confirmation->value = !empty($_POST['value']) ? $_POST['value'] : null;
+            $payu_confirmation->administrative_fee = !empty($_POST['administrative_fee']) ? $_POST['administrative_fee'] : null;
+            $payu_confirmation->email_buyer = !empty($_POST['email_buyer']) ? $_POST['email_buyer'] : null;
+            $payu_confirmation->error_message_bank = !empty($_POST['error_message_bank']) ? $_POST['error_message_bank'] : null;
+            $payu_confirmation->shipping_city = !empty($_POST['shipping_city']) ? $_POST['shipping_city'] : null;
+            $payu_confirmation->transaction_id = !empty($_POST['transaction_id']) ? $_POST['transaction_id'] : null;
+            $payu_confirmation->sign = !empty($_POST['sign']) ? $_POST['sign'] : null;
+            $payu_confirmation->tax = !empty($_POST['tax']) ? $_POST['tax'] : null;
+            $payu_confirmation->transaction_bank_id = !empty($_POST['transaction_bank_id']) ? $_POST['transaction_bank_id'] : null;
+            $payu_confirmation->billing_address = !empty($_POST['billing_address']) ? $_POST['billing_address'] : null;
+            $payu_confirmation->payment_method_name = !empty($_POST['payment_method_name']) ? $_POST['payment_method_name'] : null;
+            $payu_confirmation->date = !empty($_POST['date']) ? $_POST['date'] : null;
+            $payu_confirmation->currency = !empty($_POST['currency']) ? $_POST['currency'] : null;
+            $payu_confirmation->shipping_address = !empty($_POST['shipping_address']) ? $_POST['shipping_address'] : null;
+            $payu_confirmation->bank_id = !empty($_POST['bank_id']) ? $_POST['bank_id'] : null;
+            $payu_confirmation->attempts = !empty($_POST['attempts']) ? $_POST['attempts'] : null;
+            $payu_confirmation->exchange_rate = !empty($_POST['exchange_rate']) ? $_POST['exchange_rate'] : null;
+            $payu_confirmation->shipping_country = !empty($_POST['shipping_country']) ? $_POST['shipping_country'] : null;
+            $payu_confirmation->franchise = !empty($_POST['franchise']) ? $_POST['franchise'] : null;
+            $payu_confirmation->ip = !empty($_POST['ip']) ? $_POST['ip'] : null;
+            $payu_confirmation->billing_city = !empty($_POST['billing_city']) ? $_POST['billing_city'] : null;
+            $payu_confirmation->reference_sale = !empty($_POST['reference_sale']) ? $_POST['reference_sale'] : null;
+            $payu_confirmation->pedido_id = $pedido->id;
+            $payu_confirmation->save();
         });
 
         return response(null, 200);
