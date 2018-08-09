@@ -11,6 +11,7 @@ use Storage;
 class NoticiaController extends Controller
 {
     public $storagePath = 'public/img/noticias';
+
     /**
      * Display a listing of the resource.
      *

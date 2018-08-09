@@ -32,6 +32,8 @@ Route::apiResource('noticia', 'NoticiaController', ['parameters' => ['noticia' =
 Route::apiResource('noticia_imagen', 'NoticiaImagenController');
 Route::apiResource('evento', 'EventoController');
 Route::apiResource('evento_imagen', 'EventoImagenController');
+Route::apiResource('beneficio', 'BeneficioController');
+Route::apiResource('beneficio_imagen', 'BeneficioImagenController');
 Route::apiResource('payu_confirmacion', 'PayuConfirmacionController');
 
 Route::post('pedido/giftcard', 'PedidoController@giftcard');
@@ -52,6 +54,7 @@ Route::get('/suscripcion/export/excel', 'SuscripcionController@export');
 Route::get('noticia/filter/featured', 'NoticiaController@getFeatured');
 Route::get('noticia/{noticia}/relacionadas', 'NoticiaController@getRelated');
 Route::get('evento/{evento}/relacionadas', 'EventoController@getRelated');
+Route::get('beneficio/{beneficio}/relacionadas', 'BeneficioController@getRelated');
 
 
 
