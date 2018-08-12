@@ -19,16 +19,6 @@ class CuponController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -57,17 +47,6 @@ class CuponController extends Controller
     public function show(Cupon $cupon)
     {
         return response($cupon, 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Cupon  $cupon
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Cupon $cupon)
-    {
-        //
     }
 
     /**

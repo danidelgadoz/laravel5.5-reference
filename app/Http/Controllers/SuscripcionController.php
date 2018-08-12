@@ -33,16 +33,6 @@ class SuscripcionController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -70,17 +60,6 @@ class SuscripcionController extends Controller
             ->find($id);
 
         return response($suscripcion, 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Suscripcion  $suscripcion
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Suscripcion $suscripcion)
-    {
-        //
     }
 
     /**

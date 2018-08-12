@@ -17,50 +17,53 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::apiResource('cliente', 'ClienteController');
-Route::apiResource('cupon', 'CuponController');
-Route::apiResource('factura', 'FacturaController');
-Route::apiResource('pedido', 'PedidoController');
-Route::apiResource('suscripcion', 'SuscripcionController');
-Route::apiResource('pedido_detalle', 'PedidoDetalleController');
-Route::apiResource('contacto-log', 'ContactoLogController');
-Route::apiResource('mailing-suscripcion', 'MailingSuscripcionController');
-Route::apiResource('reclamacion', 'ReclamacionController');
-Route::apiResource('producto', 'ProductoController');
-Route::apiResource('categoria', 'CategoriaController', ['parameters' => ['categoria' => 'categoria']]);
-Route::apiResource('noticia', 'NoticiaController', ['parameters' => ['noticia' => 'noticia']]);
-Route::apiResource('noticia_imagen', 'NoticiaImagenController');
-Route::apiResource('evento', 'EventoController');
-Route::apiResource('evento_imagen', 'EventoImagenController');
-Route::apiResource('beneficio', 'BeneficioController');
-Route::apiResource('beneficio_imagen', 'BeneficioImagenController');
-Route::apiResource('payu_confirmacion', 'PayuConfirmacionController');
+Route::prefix('')->middleware('auth:api')->group(function () {
+    Route::apiResource('beneficio', 'BeneficioController');
+    Route::apiResource('beneficio_imagen', 'BeneficioImagenController');
+    Route::apiResource('categoria', 'CategoriaController', ['parameters' => ['categoria' => 'categoria']]);
+    Route::apiResource('cliente', 'ClienteController');
+    Route::apiResource('contacto-log', 'ContactoLogController');
+    Route::apiResource('cupon', 'CuponController');
+    Route::apiResource('evento', 'EventoController');
+    Route::apiResource('evento_imagen', 'EventoImagenController');
+    Route::apiResource('factura', 'FacturaController');
+    Route::get('giftcard', 'GiftcardController@index');
+    Route::get('giftcard/{giftcard}', 'GiftcardController@show');
+    Route::get('giftcard/pedido/{pedido}', 'GiftcardController@getByPedido');
+    Route::apiResource('noticia', 'NoticiaController', ['parameters' => ['noticia' => 'noticia']]);
+    Route::apiResource('noticia_imagen', 'NoticiaImagenController');
+    Route::apiResource('mailing-suscripcion', 'MailingSuscripcionController');
+    Route::apiResource('payu_confirmacion', 'PayuConfirmacionController');
+    Route::get('payu_confirmacion/pedido/{pedido}', 'PayuConfirmacionController@getByPedido');
+    Route::apiResource('pedido', 'PedidoController');
+    Route::put('pedido/{pedido}/confirm', 'PedidoController@confirm');
+    Route::put('pedido/{pedido}/cancel', 'PedidoController@cancel');
+    Route::apiResource('pedido_detalle', 'PedidoDetalleController');
+    Route::apiResource('producto', 'ProductoController');
+    Route::apiResource('reclamacion', 'ReclamacionController');
+    Route::apiResource('suscripcion', 'SuscripcionController');
+});
 
-Route::post('pedido/giftcard', 'PedidoController@giftcard');
-Route::put('pedido/{pedido}/confirm', 'PedidoController@confirm');
-Route::put('pedido/{pedido}/cancel', 'PedidoController@cancel');
-
-Route::get('giftcard', 'GiftcardController@index');
-Route::get('giftcard/{giftcard}', 'GiftcardController@show');
+Route::get('beneficio', 'BeneficioController@index');
+Route::get('beneficio/{beneficio}', 'BeneficioController@show');
+Route::get('beneficio/{beneficio}/relacionadas', 'BeneficioController@getRelated');
+Route::post('contacto-log', 'ContactoLogController@store');
+Route::get('evento', 'EventoController@index');
+Route::get('evento/{evento}', 'EventoController@show');
+Route::get('evento/{evento}/relacionadas', 'EventoController@getRelated');
 Route::post('giftcard/validar', 'GiftcardController@validar');
 Route::put('giftcard/canjear', 'GiftcardController@canjear');
-Route::get('giftcard/pedido/{pedido}', 'GiftcardController@getByPedido');
-
-Route::post('payu/confirmacion', 'PedidoController@payuConfirmation');
-Route::get('payu_confirmacion/pedido/{pedido}', 'PayuConfirmacionController@getByPedido');
-
-Route::get('/suscripcion/export/excel', 'SuscripcionController@export');
-
+Route::get('noticia', 'NoticiaController@index');
+Route::get('noticia/{noticia}', 'NoticiaController@show');
 Route::get('noticia/filter/featured', 'NoticiaController@getFeatured');
 Route::get('noticia/{noticia}/relacionadas', 'NoticiaController@getRelated');
-Route::get('evento/{evento}/relacionadas', 'EventoController@getRelated');
-Route::get('beneficio/{beneficio}/relacionadas', 'BeneficioController@getRelated');
+Route::post('mailing-suscripcion', 'MailingSuscripcionController@store');
+Route::post('payu/confirmacion', 'PedidoController@payuConfirmation');
+Route::post('pedido', 'PedidoController@store');
+Route::get('producto', 'ProductoController@index');
+Route::post('reclamacion', 'ReclamacionController@store');
+Route::get('suscripcion/export/excel', 'SuscripcionController@export');
 
-
-
-Route::prefix('admin')->middleware('auth:api')->group(function () {
-    Route::apiResource('plan', 'PlanController');
-});
 
 Route::get('env', function () {
     $env = [

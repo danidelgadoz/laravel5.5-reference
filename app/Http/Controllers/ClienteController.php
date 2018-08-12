@@ -19,16 +19,6 @@ class ClienteController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -62,17 +52,6 @@ class ClienteController extends Controller
     }
 
     /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Cliente  $cliente
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Cliente $cliente)
-    {
-        //
-    }
-
-    /**
      * Update the specified resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -81,8 +60,12 @@ class ClienteController extends Controller
      */
     public function update(Request $request, Cliente $cliente)
     {
-        $cliente->culqui_id = $request->culqui_id;
-        $cliente->culqui_card_id = $request->culqui_card_id;
+        $cliente->first_name = $request->first_name;
+        $cliente->last_name = $request->last_name;
+        $cliente->address = $request->address;
+        $cliente->address_city = $request->address_city;
+        $cliente->country_code = $request->country_code;
+        $cliente->phone_number = $request->phone_number;
         $cliente->save();
         return response($cliente, 200);
     }

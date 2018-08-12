@@ -21,16 +21,6 @@ class ContactoLogController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -56,17 +46,6 @@ class ContactoLogController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function show(ContactoLog $contactoLog)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\ContactoLog  $contactoLog
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(ContactoLog $contactoLog)
     {
         //
     }

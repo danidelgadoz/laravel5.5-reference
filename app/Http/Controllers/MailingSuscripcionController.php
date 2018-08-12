@@ -19,16 +19,6 @@ class MailingSuscripcionController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
@@ -52,17 +42,6 @@ class MailingSuscripcionController extends Controller
     public function show(MailingSuscripcion $mailingSuscripcion)
     {
         return response($mailingSuscripcion, 200);
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\MailingSuscripcion  $mailingSuscripcion
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(MailingSuscripcion $mailingSuscripcion)
-    {
-        //
     }
 
     /**

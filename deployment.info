@@ -55,8 +55,8 @@ DEPLOYMENT AT UBUNTU SERVER:
 
 OAUTH IMPLEMETATION:
     - sudo composer require laravel/passport=~4.0
-    - php artisan migrate
-    - php artisan passport:install
+    - php artisan migrate // deployment, generates database tables
+    - php artisan passport:install // deployment, insert data at outh_clients table
         Encryption keys generated successfully.
         Personal access client created successfully.
         Client ID: 1
@@ -67,11 +67,11 @@ OAUTH IMPLEMETATION:
 
     - php artisan passport:client --password (to add aditional client)
     - php artisan make:seeder UserTableSeeder
-    - php artisan db:seed
+    - php artisan db:seed // deployment, inserts a new user at users table
 
 
 Excel implementation:
     - composer require maatwebsite/excel:~2.1
 
 Storage implementation:
-    - php artisan storage:link
+    - php artisan storage:link // works as acceso directo from public to storage directory
