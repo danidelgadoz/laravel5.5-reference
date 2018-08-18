@@ -10,7 +10,7 @@ class Giftcard extends Model
     public $timestamps = false;
     protected $dates = ['deleted_at'];
     protected $guarded = ['id', "deleted_at", "created_at", "updated_at"];
-    protected $with = ['pedido_detalle'];
+//    protected $with = ['pedido_detalle'];
 
     public function pedido_detalle()
     {

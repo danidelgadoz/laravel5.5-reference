@@ -162,7 +162,9 @@ class PedidoController extends Controller
             'cliente',
             'cupon',
             'factura',
-            'detalles'
+            'detalles' => function ($query) {
+                $query->with(['giftcard','suscripcion']);
+            }
         ])->find($id);
 
         return response($pedido, 200);

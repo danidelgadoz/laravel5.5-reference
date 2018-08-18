@@ -41,4 +41,22 @@ class PedidoDetalle extends Model
                 'descripcion'
             ]);
     }
+
+    public function suscripcion()
+    {
+        return $this->belongsTo('App\Suscripcion', 'id', 'pedido_detalle_id')
+            ->select([
+                'id',
+                'pedido_detalle_id'
+            ]);
+    }
+
+    public function giftcard()
+    {
+        return $this->belongsTo('App\Giftcard', 'id', 'pedido_detalle_id')
+            ->select([
+                'id',
+                'pedido_detalle_id'
+            ]);
+    }
 }
