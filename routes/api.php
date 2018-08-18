@@ -68,7 +68,8 @@ Route::get('suscripcion/export/excel', 'SuscripcionController@export');
 Route::get('env', function () {
     $env = [
         'MAIL_HOST' => env('MAIL_HOST'),
-        'CRAFTIMES_EMAIL_CONTACTO' => env('CRAFTIMES_EMAIL_CONTACTO')
+        'CRAFTIMES_EMAIL_CONTACTO' => env('CRAFTIMES_EMAIL_CONTACTO'),
+        'CRAFTIMES_EMAIL_CC_PEDIDO' => env('CRAFTIMES_EMAIL_CC_PEDIDO')
     ];
     dd($env) ;
 });
