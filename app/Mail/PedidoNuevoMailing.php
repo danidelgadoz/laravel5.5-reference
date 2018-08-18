@@ -35,7 +35,7 @@ class PedidoNuevoMailing extends Mailable
     {
         return $this->from('ventas@craftimes.com', 'Craftimes Ventas')
                     ->to($this->pedido->cliente['email'])
-//                    ->cc(['prueba1@craftimes.com', 'prueba2@craftimes.com'])
+                    ->cc([env('CRAFTIMES_EMAIL_CC_PEDIDO')])
                     ->subject('Craftimes: Nuevo pedido')
                     ->view('email.pedidonuevo');
     }
