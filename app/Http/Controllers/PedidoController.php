@@ -202,9 +202,6 @@ class PedidoController extends Controller
      */
     public function confirm(Request $request, Pedido $pedido)
     {
-        if ($pedido->estado === 'PROCESANDO')
-            return response(['error' => "El pedido esta siendo procesado en la plataforma de PayU"], 409);
-
         if ($pedido->estado === 'CONFIRMADA' || $pedido->estado === 'CANCELADA')
             return response(['error' => "El pedido ya ha sido '{$pedido['estado']}'"], 409);
 
@@ -225,9 +222,6 @@ class PedidoController extends Controller
      */
     public function cancel(Request $request, Pedido $pedido)
     {
-        if ($pedido->estado === 'PROCESANDO')
-            return response(['error' => "El pedido esta siendo procesado en la plataforma de PayU"], 409);
-
         if ($pedido->estado === 'CONFIRMADA' || $pedido->estado === 'CANCELADA')
             return response(['error' => "El pedido ya ha sido '{$pedido['estado']}'"], 409);
 
@@ -271,9 +265,6 @@ class PedidoController extends Controller
 
         $data = $_POST;
         $pedido = Pedido::findOrFail($data["reference_sale"]);
-
-        if ($pedido->estado !== 'PROCESANDO')
-            return response(null, 409);
 
         DB::transaction(function () use ($data, $pedido) {
             $pedido->estado = 'CONFIRMADA';
