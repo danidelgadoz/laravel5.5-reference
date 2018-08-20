@@ -87,6 +87,20 @@
                                                                 </tbody>
                                                             </table>
                                                             @break
+                                                        @case("TARJETA")
+                                                            <p>Tarjeta crédito/débito VISA/MASTER PayU</p>
+                                                            <table>
+                                                                <tbody>
+                                                                <tr>
+                                                                    <td>Si quieres que el pago de tu suscripción se haga de manera automática
+                                                                        en tu cuenta, consúltanos a:
+                                                                        <a href="mailto:info@craftimes.com.pe"
+                                                                           target="_blank">info@craftimes.com.pe</a>
+                                                                    </td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                            @break
                                                         @case("CONTRA_ENTREGA")
                                                             <p><strong>Pago contra entrega (sólo para Lima metropolitana)</strong></p>
                                                             @break
