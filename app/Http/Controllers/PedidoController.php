@@ -220,6 +220,7 @@ class PedidoController extends Controller
                 }
                 else {
                     $suscripcion = new Suscripcion();
+                    $suscripcion->estado = "ACTIVO";
                     $suscripcion->fecha_de_inicio = date("Y-m-d H:i:s");
                     $suscripcion->nombres = $envio->remitente_nombres;
                     $suscripcion->email = $envio->remitente_email;
@@ -329,6 +330,7 @@ class PedidoController extends Controller
                 }
                 else {
                     $suscripcion = new Suscripcion();
+                    $suscripcion->estado = "ACTIVO";
                     $suscripcion->fecha_de_inicio = date("Y-m-d H:i:s");
                     $suscripcion->nombres = $envio->remitente_nombres;
                     $suscripcion->email = $envio->remitente_email;

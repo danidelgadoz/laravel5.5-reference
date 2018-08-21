@@ -57,7 +57,7 @@ class SuscripcionController extends Controller
                     $query->with(['cliente', 'factura']);
                 }]);
             }])
-            ->find($id);
+            ->findOrFail($id);
 
         return response($suscripcion, 200);
     }
@@ -71,7 +71,9 @@ class SuscripcionController extends Controller
      */
     public function update(Request $request, Suscripcion $suscripcion)
     {
-        //
+        $suscripcion->estado = $request->estado;
+        $suscripcion->save();
+        return response($suscripcion, 200);
     }
 
     /**
