@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Giftcard extends Model
 {
     protected $table = 'giftcard';
-    public $timestamps = false;
+    public $timestamps = true;
     protected $dates = ['deleted_at'];
     protected $guarded = ['id', "deleted_at", "created_at", "updated_at"];
 //    protected $with = ['pedido_detalle'];

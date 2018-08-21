@@ -129,10 +129,10 @@
                                                             {{ $envio['remitente_nombres'] }}
                                                         <br>
                                                             <a href="https://maps.google.com/?q=Manuel+villavicencio+975+%0A%0A%0A%0ASan+Martin+de+Porres,++Lima,++%0APer%C3%BA&amp;entry=gmail&amp;source=g">
-                                                                {{ $envio['direccion'] }}</a>
+                                                                {{ $envio['entrega_direccion'] }}</a>
                                                             <br>
                                                             <a href="https://maps.google.com/?q=Manuel+villavicencio+975+%0A%0A%0A%0ASan+Martin+de+Porres,++Lima,++%0APer%C3%BA&amp;entry=gmail&amp;source=g">
-                                                                {{ $envio['distrito'] }}, Lima, </a>
+                                                                {{ $envio['entrega_distrito'] }}, Lima, </a>
                                                             <br>
                                                             <a href="https://maps.google.com/?q=Manuel+villavicencio+975+%0A%0A%0A%0ASan+Martin+de+Porres,++Lima,++%0APer%C3%BA&amp;entry=gmail&amp;source=g">
                                                                 Perú</a>
