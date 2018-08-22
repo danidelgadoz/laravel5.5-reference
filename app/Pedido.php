@@ -48,6 +48,9 @@ class Pedido extends Model
                 'precio_unitario',
                 'cantidad',
                 'total',
+                'is_giftcard',
+                'mailing_owner_address',
+                'mailign_owner_name',
                 'producto_id',
                 'pedido_id',
             ]);
