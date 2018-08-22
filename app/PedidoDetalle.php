@@ -16,7 +16,6 @@ class PedidoDetalle extends Model
         return $this->hasOne('App\Pedido', 'id', 'pedido_id')
             ->select([
                 'id',
-                'producto',
                 'tipo_de_pago',
                 'estado',
                 'precio',
