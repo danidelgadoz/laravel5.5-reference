@@ -113,7 +113,6 @@ class GiftcardController extends Controller
 
         $suscripcion = DB::transaction(function () use ($request, $pedido_detalle, $giftcard) {
             $suscripcion = new Suscripcion();
-            $suscripcion->meses = $giftcard["meses"];
             $suscripcion->fecha_de_inicio = date("Y-m-d H:i:s");
             $suscripcion->direccion = $request->envio['direccion'];
             $suscripcion->distrito = $request->envio['distrito'];
