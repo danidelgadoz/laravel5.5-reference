@@ -53,7 +53,7 @@ class BeneficioController extends Controller
             foreach ($images_list_array as $imagen) {
                 $beneficio_imagen = new BeneficioImagen();
                 $beneficio_imagen->url = $imagen;
-                $beneficio_imagen->noticia_id = $beneficio->id;
+                $beneficio_imagen->beneficio_id = $beneficio->id;
                 $beneficio_imagen->save();
             }
 
