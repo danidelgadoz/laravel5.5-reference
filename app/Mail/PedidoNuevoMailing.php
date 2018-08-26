@@ -33,10 +33,15 @@ class PedidoNuevoMailing extends Mailable
      */
     public function build()
     {
+        if($this->pedido->detalles[0]['is_giftcard'])
+            $subject = "Craftimes: Tu compra se ha realizado con éxito";
+        else
+            $subject = "Craftimes: Tu suscripción se ha realizado con éxito";
+
         return $this->from('ventas@craftimes.com', 'Craftimes Ventas')
                     ->to($this->pedido->cliente['email'])
                     ->cc([env('CRAFTIMES_EMAIL_CC_PEDIDO')])
-                    ->subject('Craftimes: Nuevo pedido')
+                    ->subject($subject)
                     ->view('email.pedidonuevo');
     }
 }
