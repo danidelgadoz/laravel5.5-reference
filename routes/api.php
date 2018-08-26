@@ -60,6 +60,7 @@ Route::get('noticia/{noticia}/relacionadas', 'NoticiaController@getRelated');
 Route::post('mailing-suscripcion', 'MailingSuscripcionController@store');
 Route::post('payu/confirmacion', 'PedidoController@payuConfirmation');
 Route::post('pedido', 'PedidoController@store');
+Route::get('pedido/{pedido}', 'PedidoController@show');
 Route::get('producto', 'ProductoController@index');
 Route::post('reclamacion', 'ReclamacionController@store');
 Route::get('suscripcion/export/excel', 'SuscripcionController@export');
