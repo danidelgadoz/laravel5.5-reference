@@ -7,6 +7,7 @@ use App\PedidoDetalle;
 use App\Pedido;
 use App\Suscripcion;
 use App\Mail\SuscripcionMailing;
+use App\Mail\GiftcardCanjeadoMailing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -102,7 +103,7 @@ class GiftcardController extends Controller
     {
         $giftcard = Giftcard::where('codigo', $request->codigo)->firstOrFail();
         $pedido_detalle = PedidoDetalle::find($giftcard->pedido_detalle_id);
-        $pedido = Pedido::find($pedido_detalle->pedido_id, ['estado']);
+        $pedido = Pedido::with(['cliente'])->find($pedido_detalle->pedido_id, ['estado', 'cliente_id']);
 
         if ($giftcard->estado === 'CANJEADO')
             return response(['error' => "Giftcard anteriormente canjeado."], 409);
@@ -132,6 +133,7 @@ class GiftcardController extends Controller
         });
 
         Mail::send(new SuscripcionMailing($suscripcion));
+        Mail::send(new GiftcardCanjeadoMailing($pedido, $giftcard));
 
         return response([
             'message' => "Giftcard canjeado con éxito, su suscripcion ha iniciado.",
