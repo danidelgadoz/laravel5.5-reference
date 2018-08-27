@@ -11,7 +11,7 @@
                                 <tr>
                                     <td bgcolor="#789f28" align="center" style="background:#789f28;text-align:center;padding:12px">
                                         <center>
-                                            <img width="200" src="https://craftimes.com/assets/logo-green.png">
+                                            <img width="200" src="https://craftimes.com/assets/logo-white.png">
                                         </center>
                                     </td>
                                 </tr>
