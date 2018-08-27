@@ -67,7 +67,7 @@ class PayuConfirmacionController extends Controller
 
     public function getByPedido($id)
     {
-        $payuConfirmacion = PayuConfirmacion::where('pedido_id', $id)->firstOrFail();
+        $payuConfirmacion = PayuConfirmacion::where('pedido_id', $id)->orderByDesc("id")->get();
 
         return response($payuConfirmacion, 200);
     }
