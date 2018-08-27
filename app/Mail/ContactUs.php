@@ -33,7 +33,6 @@ class ContactUs extends Mailable
     {
         return $this->from($this->contacto->email, $this->contacto->nombres)
                     ->to(env('CRAFTIMES_EMAIL_CONTACTO'))
-//                    ->cc(['prueba1@craftimes.com', 'prueba2@craftimes.com'])
                     ->subject('Craftimes Contacto')
                     ->view('email.contact');
     }

@@ -31,7 +31,7 @@ class GiftcardMailing extends Mailable
      */
     public function build()
     {
-        return $this->from('ventas@craftimes.com', 'Craftimes Ventas')
+        return $this->from('contacto@craftimes.com', 'Craftimes')
                     ->to($this->giftcard->mailing_owner_address)
                     ->subject('Craftimes: canjea tu giftcard')
                     ->view('email.giftcard');

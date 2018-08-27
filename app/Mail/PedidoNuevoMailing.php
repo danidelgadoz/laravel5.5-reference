@@ -38,7 +38,7 @@ class PedidoNuevoMailing extends Mailable
         else
             $subject = "Craftimes: Tu suscripción se ha realizado con éxito";
 
-        return $this->from('ventas@craftimes.com', 'Craftimes Ventas')
+        return $this->from('contacto@craftimes.com', 'Craftimes')
                     ->to($this->pedido->cliente['email'])
                     ->cc([env('CRAFTIMES_EMAIL_CC_PEDIDO')])
                     ->subject($subject)

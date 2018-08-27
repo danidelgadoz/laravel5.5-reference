@@ -32,7 +32,7 @@ class SuscripcionMailing extends Mailable
     {
         $subject = "Craftimes: Tu suscripción se ha realizado con éxito";
 
-        return $this->from('ventas@craftimes.com', 'Craftimes Ventas')
+        return $this->from('contacto@craftimes.com', 'Craftimes')
                     ->to($this->suscripcion['email'])
                     ->cc([env('CRAFTIMES_EMAIL_CC_PEDIDO')])
                     ->subject($subject)
