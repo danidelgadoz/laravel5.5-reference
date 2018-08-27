@@ -6,8 +6,10 @@ use App\Giftcard;
 use App\PedidoDetalle;
 use App\Pedido;
 use App\Suscripcion;
+use App\Mail\SuscripcionMailing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 
 class GiftcardController extends Controller
 {
@@ -128,6 +130,8 @@ class GiftcardController extends Controller
 
             return $suscripcion;
         });
+
+        Mail::send(new SuscripcionMailing($suscripcion));
 
         return response([
             'message' => "Giftcard canjeado con éxito, su suscripcion ha iniciado.",
