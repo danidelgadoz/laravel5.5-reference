@@ -89,14 +89,19 @@
                                                         {{ $pedido->factura['first_name'] }}
                                                         <br>
 
-                                                        <a href="https://maps.google.com/?q=Manuel+villavicencio+975+%0A%0A%0A%0ASan+Martin+de+Porres,++Lima,++%0APer%C3%BA&amp;entry=gmail&amp;source=g">{{ $pedido->factura['direccion'] }}</a>
+                                                        <a href="https://maps.google.com/?q={{ $pedido->factura['direccion'] }}, {{ $pedido->factura['distrito'] }}, Lima, Perú">
+                                                            {{ $pedido->factura['direccion'] }}</a>
                                                         <br>
-                                                        <a href="https://maps.google.com/?q=Manuel+villavicencio+975+%0A%0A%0A%0ASan+Martin+de+Porres,++Lima,++%0APer%C3%BA&amp;entry=gmail&amp;source=g">
+
+                                                        <a href="https://maps.google.com/?q={{ $pedido->factura['direccion'] }}, {{ $pedido->factura['distrito'] }}, Lima, Perú">
                                                             {{ $pedido->factura['distrito'] }}, Lima, </a>
                                                         <br>
-                                                        <a href="https://maps.google.com/?q=Manuel+villavicencio+975+%0A%0A%0A%0ASan+Martin+de+Porres,++Lima,++%0APer%C3%BA&amp;entry=gmail&amp;source=g">
+
+                                                        <a href="https://maps.google.com/?q={{ $pedido->factura['direccion'] }}, {{ $pedido->factura['distrito'] }}, Lima, Perú">
                                                             Perú</a>
-                                                        <br> RUC: {{ $pedido->factura['razon_social'] }}
+                                                        <br>
+
+                                                        RUC: {{ $pedido->factura['razon_social'] }}
                                                     @else
                                                         <p><i>No solicitada</i></p>
                                                     @endif
@@ -106,37 +111,35 @@
 
                                                 <td valign="top" style="font-size:12px;padding:7px 9px 9px 9px;border-left:1px solid #eaeaea;border-bottom:1px solid #eaeaea;border-right:1px solid #eaeaea">
                                                     @switch($pedido->tipo_de_pago)
-                                                    @case("TRANSFERENCIA")
-                                                    <p>Transferencia Bancaria - BCP</p>
-                                                    <table>
-                                                        <tbody>
-                                                        <tr>
-                                                            <td>Si quieres que el pago de tu suscripción se haga de manera automática
-                                                                en tu cuenta, consúltanos a:
-                                                                <a href="mailto:info@craftimes.com.pe"
-                                                                   target="_blank">info@craftimes.com.pe</a>
-                                                            </td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                    @break
-                                                    @case("TARJETA")
-                                                    <p>Tarjeta crédito/débito VISA/MASTER PayU</p>
-                                                    <table>
-                                                        <tbody>
-                                                        <tr>
-                                                            <td>Si quieres que el pago de tu suscripción se haga de manera automática
-                                                                en tu cuenta, consúltanos a:
-                                                                <a href="mailto:info@craftimes.com.pe"
-                                                                   target="_blank">info@craftimes.com.pe</a>
-                                                            </td>
-                                                        </tr>
-                                                        </tbody>
-                                                    </table>
-                                                    @break
-                                                    @case("CONTRA_ENTREGA")
-                                                    <p><strong>Pago contra entrega (sólo para Lima metropolitana)</strong></p>
-                                                    @break
+                                                        @case("TRANSFERENCIA")
+                                                            <p>Transferencia Bancaria - BCP</p>
+                                                            <table>
+                                                                <tbody>
+                                                                <tr>
+                                                                    <td>Si quieres que el pago de tu suscripción se haga de manera automática en tu cuenta, consúltanos a:
+                                                                        <a href="mailto:contacto@craftimes.com" target="_blank">contacto@craftimes.com</a>
+                                                                    </td>
+                                                                </tr>
+                                                                </tbody>
+                                                            </table>
+                                                        @break
+                                                        @case("TARJETA")
+                                                            <p>Tarjeta crédito/débito VISA/MASTER PayU</p>
+                                                            @if (!$pedido->detalles[0]['is_giftcard'])
+                                                                <table>
+                                                                    <tbody>
+                                                                    <tr>
+                                                                        <td>Si quieres que el pago de tu suscripción se haga de manera automática en tu cuenta, consúltanos a:
+                                                                            <a href="mailto:contacto@craftimes.com" target="_blank">contacto@craftimes.com</a>
+                                                                        </td>
+                                                                    </tr>
+                                                                    </tbody>
+                                                                </table>
+                                                            @endif
+                                                        @break
+                                                        @case("CONTRA_ENTREGA")
+                                                            <p><strong>Pago contra entrega (sólo para Lima metropolitana)</strong></p>
+                                                        @break
                                                     @endswitch
                                                 </td>
                                             </tr>
@@ -154,17 +157,17 @@
                                             <tbody>
                                             <tr>
                                                 <td valign="top" style="font-size:12px;padding:7px 9px 9px 9px;border-left:1px solid #eaeaea;border-bottom:1px solid #eaeaea;border-right:1px solid #eaeaea"><span class="im">
-                                                            {{ $envio['remitente_nombres'] }}
-                                                        <br>
-                                                            <a href="https://maps.google.com/?q=Manuel+villavicencio+975+%0A%0A%0A%0ASan+Martin+de+Porres,++Lima,++%0APer%C3%BA&amp;entry=gmail&amp;source=g">
-                                                                {{ $envio['entrega_direccion'] }}</a>
-                                                            <br>
-                                                            <a href="https://maps.google.com/?q=Manuel+villavicencio+975+%0A%0A%0A%0ASan+Martin+de+Porres,++Lima,++%0APer%C3%BA&amp;entry=gmail&amp;source=g">
-                                                                {{ $envio['entrega_distrito'] }}, Lima, </a>
-                                                            <br>
-                                                            <a href="https://maps.google.com/?q=Manuel+villavicencio+975+%0A%0A%0A%0ASan+Martin+de+Porres,++Lima,++%0APer%C3%BA&amp;entry=gmail&amp;source=g">
-                                                                Perú</a>
-                                                            <br> T: {{ $envio['remitente_telefono'] }} &nbsp;
+                                                    {{ $envio['remitente_nombres'] }}
+                                                    <br>
+                                                    <a href="https://maps.google.com/?q={{ $envio['entrega_direccion'] }}, {{ $envio['entrega_distrito'] }}, Lima, Perú">
+                                                        {{ $envio['entrega_direccion'] }}</a>
+                                                    <br>
+                                                    <a href="https://maps.google.com/?q={{ $envio['entrega_direccion'] }}, {{ $envio['entrega_distrito'] }}, Lima, Perú">
+                                                        {{ $envio['entrega_distrito'] }}, Lima, </a>
+                                                    <br>
+                                                    <a href="https://maps.google.com/?q={{ $envio['entrega_direccion'] }}, {{ $envio['entrega_distrito'] }}, Lima, Perú">
+                                                        Perú</a>
+                                                    <br>T: {{ $envio['remitente_telefono'] }} &nbsp;
                                                 </td>
                                                 <td>&nbsp;</td>
                                                 <td valign="top" style="font-size:12px;padding:7px 9px 9px 9px;border-left:1px solid #eaeaea;border-bottom:1px solid #eaeaea;border-right:1px solid #eaeaea">
@@ -237,9 +240,8 @@
                                 <tr>
                                     <td valign="top" style="padding:20px; padding-top: 0">
                                         <p style="font-size:12px;line-height:16px;margin:0">
-                                            <span style="font-size:14px;line-height:20px">Si tienes alguna duda respecto a su pedido, ponte en contacto con nosotros enviando un
-                                                correo electrónico a
-                                                <a href="mailto:contacto@craftimes.com" style="color:#789f28; font-weight: bold;" target="_blank">contacto@craftimes.com.pe</a>, por el chat online o Whatsapp a
+                                            <span style="font-size:14px;line-height:20px">Si tienes alguna duda respecto a su pedido, ponte en contacto con nosotros enviando un correo electrónico a
+                                                <a href="mailto:contacto@craftimes.com" style="color:#789f28; font-weight: bold;" target="_blank">contacto@craftimes.com</a>, por el chat online o Whatsapp a
                                                 <span class="m_322456910589396027m_768238685266715055nobr">(+51) 994 043 709</span>.
                                             </span>
                                         </p>

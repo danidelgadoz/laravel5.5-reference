@@ -40,7 +40,7 @@
                                         <p style="font-size:12px;line-height:16px;margin:0">
                                             <span style="font-size:14px;line-height:20px">Si tienes alguna duda respecto, ponte en contacto con nosotros enviando un
                                                 correo electrónico a
-                                                <a href="mailto:contacto@craftimes.com" style="color:#789f28; font-weight: bold;" target="_blank">contacto@craftimes.com.pe</a>, por el chat online o Whatsapp a
+                                                <a href="mailto:contacto@craftimes.com" style="color:#789f28; font-weight: bold;" target="_blank">contacto@craftimes.com</a>, por el chat online o Whatsapp a
                                                 <span class="m_322456910589396027m_768238685266715055nobr">(+51) 994 043 709</span>.
                                             </span>
                                         </p>
