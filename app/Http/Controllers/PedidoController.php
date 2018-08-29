@@ -298,65 +298,75 @@ class PedidoController extends Controller
     {
         $this->storePayuConfirmation();
 
-        if ($_POST['state_pol'] === "6")
-            return response("Transaction (Declinada) almacenada en base de datos", 200);
-
-        if ($_POST['state_pol'] === "5")
-            return response("Transaction (Expirada) almacenada en base de datos", 200);
-
-        $pedido = Pedido::findOrFail($_POST["reference_sale"]);
-        $pedido_detalles = PedidoDetalle::where('pedido_id', $pedido->id)->get();
-        $envio = Envio::where('pedido_id', $pedido->id)->firstOrFail();
-
-        DB::transaction(function () use ($pedido, $pedido_detalles, $envio) {
-            $pedido->estado = 'CONFIRMADA';
-            $pedido->save();
-
-            foreach ($pedido_detalles as $pd) {
-                if ($pd['is_giftcard']) {
-                    $giftcard = new Giftcard();
-                    $giftcard->estado = 'DISPONIBLE';
-                    $giftcard->codigo = $this->random(10);
-                    $giftcard->mailing_owner_address = $pd['mailing_owner_address'];
-                    $giftcard->mailign_owner_name = $pd['mailign_owner_name'];
-                    $giftcard->remitente_nombres = $envio->remitente_nombres;
-                    $giftcard->remitente_email = $envio->remitente_email;
-                    $giftcard->remitente_telefono = $envio->remitente_telefono;
-                    $giftcard->entrega_direccion = $envio->entrega_direccion;
-                    $giftcard->entrega_distrito = $envio->entrega_distrito;
-                    $giftcard->entrega_referencia = $envio->entrega_referencia;
-                    $giftcard->pedido_detalle_id = $pd->id;
-                    $giftcard->save();
-
-                    if ($giftcard->mailing_owner_address)
-                        Mail::send(new GiftcardMailing($giftcard));
-
-                }
-                else {
-                    $suscripcion = new Suscripcion();
-                    $suscripcion->estado = "ACTIVO";
-                    $suscripcion->fecha_de_inicio = date("Y-m-d H:i:s");
-                    $suscripcion->nombres = $envio->remitente_nombres;
-                    $suscripcion->email = $envio->remitente_email;
-                    $suscripcion->celular = $envio->remitente_telefono;
-                    $suscripcion->direccion = $envio->entrega_direccion;
-                    $suscripcion->distrito = $envio->entrega_distrito;
-                    $suscripcion->referencia = $envio->entrega_referencia;
-                    $suscripcion->pedido_detalle_id = $pd->id;
-                    $suscripcion->save();
-                }
-            };
-        });
-
-        $pedidoForMailing = Pedido::with([
+        $pedido = Pedido::with([
+            'detalles',
+            'envio',
             'cliente',
             'factura',
             'detalles'
-        ])->find($pedido->id);
+        ])->findOrFail($_POST["reference_sale"]);
 
-        Mail::send(new PedidoNuevoMailing($pedidoForMailing, $envio));
+        switch ($_POST['state_pol']) {
+            case "6":
+                $pedido->estado = 'DECLINADA';
+                $pedido->save();
 
-        return response("Transaction (Aprobada) almacenada en base de datos", 200);
+                return response("Transaction (Declinada) almacenada en base de datos", 200);
+                break;
+            case "5":
+                $pedido->estado = 'EXPIRADA';
+                $pedido->save();
+
+                return response("Transaction (Expirada) almacenada en base de datos", 200);
+                break;
+            case "4":
+                DB::transaction(function () use ($pedido) {
+                    $pedido->estado = 'CONFIRMADA';
+                    $pedido->save();
+
+                    foreach ($pedido->detalles as $pd) {
+                        if ($pd['is_giftcard'])
+                        {
+                            $giftcard = new Giftcard();
+                            $giftcard->estado = 'DISPONIBLE';
+                            $giftcard->codigo = $this->random(10);
+                            $giftcard->mailing_owner_address = $pd['mailing_owner_address'];
+                            $giftcard->mailign_owner_name = $pd['mailign_owner_name'];
+                            $giftcard->remitente_nombres = $pedido->envio['remitente_nombres'];
+                            $giftcard->remitente_email = $pedido->envio['remitente_email'];
+                            $giftcard->remitente_telefono = $pedido->envio['remitente_telefono'];
+                            $giftcard->entrega_direccion = $pedido->envio['entrega_direccion'];
+                            $giftcard->entrega_distrito = $pedido->envio['entrega_distrito'];
+                            $giftcard->entrega_referencia = $pedido->envio['entrega_referencia'];
+                            $giftcard->pedido_detalle_id = $pd->id;
+                            $giftcard->save();
+
+                            if ($giftcard->mailing_owner_address)
+                                Mail::send(new GiftcardMailing($giftcard));
+
+                        }
+                        else
+                        {
+                            $suscripcion = new Suscripcion();
+                            $suscripcion->estado = "ACTIVO";
+                            $suscripcion->fecha_de_inicio = date("Y-m-d H:i:s");
+                            $suscripcion->nombres = $pedido->envio['remitente_nombres'];
+                            $suscripcion->email = $pedido->envio['remitente_email'];
+                            $suscripcion->celular = $pedido->envio['remitente_telefono'];
+                            $suscripcion->direccion = $pedido->envio['entrega_direccion'];
+                            $suscripcion->distrito = $pedido->envio['entrega_distrito'];
+                            $suscripcion->referencia = $pedido->envio['entrega_referencia'];
+                            $suscripcion->pedido_detalle_id = $pd->id;
+                            $suscripcion->save();
+                        }
+                    };
+                });
+
+                Mail::send(new PedidoNuevoMailing($pedido, $pedido->envio));
+
+                return response("Transaction (Aprobada) almacenada en base de datos", 200);
+                break;
+        }
     }
 
     private function storePayuConfirmation(){
