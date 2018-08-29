@@ -296,6 +296,12 @@ class PedidoController extends Controller
 
     public function payuConfirmation()
     {
+        $remote_addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+        $remote_host = isset($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : null;
+        $http_client_ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : null;
+        $http_x_forwarded_for = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : null;
+        Log::info([$remote_addr, $remote_host, $http_client_ip, $http_x_forwarded_for]);
+//        dd([$remote_addr, $remote_host, $http_client_ip, $http_x_forwarded_for]);
         $this->storePayuConfirmation();
 
         $pedido = Pedido::with([
@@ -370,8 +376,8 @@ class PedidoController extends Controller
     }
 
     private function storePayuConfirmation(){
-        Log::info('New post request from PayU');
-        Log::info($_POST);
+//        Log::info('New post request from PayU');
+//        Log::info($_POST);
 
         $payu_confirmation = new PayuConfirmacion();
         $payu_confirmation->response_code_pol = !empty($_POST['response_code_pol']) ? $_POST['response_code_pol'] : null;
