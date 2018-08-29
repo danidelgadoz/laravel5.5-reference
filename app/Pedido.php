@@ -55,4 +55,9 @@ class Pedido extends Model
                 'pedido_id',
             ]);
     }
+
+    public function envio()
+    {
+        return $this->hasOne('App\Envio', 'pedido_id', 'id');
+    }
 }
