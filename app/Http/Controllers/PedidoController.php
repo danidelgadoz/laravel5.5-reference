@@ -296,12 +296,6 @@ class PedidoController extends Controller
 
     public function payuConfirmation()
     {
-        $remote_addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
-        $remote_host = isset($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : null;
-        $http_client_ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : null;
-        $http_x_forwarded_for = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : null;
-        Log::info([$remote_addr, $remote_host, $http_client_ip, $http_x_forwarded_for]);
-//        dd([$remote_addr, $remote_host, $http_client_ip, $http_x_forwarded_for]);
         $this->storePayuConfirmation();
 
         $pedido = Pedido::with([
@@ -444,6 +438,12 @@ class PedidoController extends Controller
         $payu_confirmation->commision_pol = !empty($_POST['commision_pol']) ? $_POST['commision_pol'] : null;
         $payu_confirmation->cus = !empty($_POST['cus']) ? $_POST['cus'] : null;
         $payu_confirmation->authorization_code = !empty($_POST['authorization_code']) ? $_POST['authorization_code'] : null;
+
+        // Security log
+        $payu_confirmation->remote_addr = isset($_SERVER['REMOTE_ADDR']) ? $_SERVER['REMOTE_ADDR'] : null;
+        $payu_confirmation->remote_host = isset($_SERVER['REMOTE_HOST']) ? $_SERVER['REMOTE_HOST'] : null;
+        $payu_confirmation->http_client_ip = isset($_SERVER['HTTP_CLIENT_IP']) ? $_SERVER['HTTP_CLIENT_IP'] : null;
+        $payu_confirmation->http_x_forwarded_for = isset($_SERVER['HTTP_X_FORWARDED_FOR']) ? $_SERVER['HTTP_X_FORWARDED_FOR'] : null;
 
         $payu_confirmation->pedido_id = !empty($_POST['reference_sale']) ? $_POST['reference_sale'] : null;
         $payu_confirmation->save();
