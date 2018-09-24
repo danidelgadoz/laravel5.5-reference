@@ -48,6 +48,7 @@ Route::get('beneficio', 'BeneficioController@index');
 Route::get('beneficio/{beneficio}', 'BeneficioController@show');
 Route::get('beneficio/{beneficio}/relacionadas', 'BeneficioController@getRelated');
 Route::post('contacto-log', 'ContactoLogController@store');
+Route::post('cupon/validar', 'CuponController@validar');
 Route::get('evento', 'EventoController@index');
 Route::get('evento/{evento}', 'EventoController@show');
 Route::get('evento/{evento}/relacionadas', 'EventoController@getRelated');

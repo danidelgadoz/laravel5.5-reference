@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Cupon;
 use Illuminate\Http\Request;
+use Carbon\Carbon;
 
 class CuponController extends Controller
 {
@@ -83,5 +84,22 @@ class CuponController extends Controller
             'deleted'=> true,
             'message' => "Se eliminó el cupon con ID {$cupon->id} con exitosamente."
         ], 200);
+    }
+
+    public function validar(Request $request)
+    {
+        $cupon_valido = Cupon::where('codigo', $request->codigo)
+            ->whereRaw('cantidad_canjeados < cantidad_disponible')
+            ->where('habilitado', true)
+            ->where('fecha_inicio', '<', Carbon::now())
+            ->where('fecha_fin', '>', Carbon::now())
+            ->first();
+
+        if (!$cupon_valido) {
+            return response(['message' => "Cupon inválido"], 409);
+        }
+
+        return response(['message' => "Cupon válido."], 200);
+
     }
 }
