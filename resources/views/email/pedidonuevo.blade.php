@@ -210,11 +210,19 @@
 
                                             <tbody>
                                             <tr class="m_322456910589396027m_768238685266715055subtotal">
-                                                <td colspan="4" align="right" style="padding:3px 9px">Total</td>
+                                                <td colspan="4" align="right" style="padding:3px 9px">Subtotal</td>
                                                 <td align="right" style="padding:3px 9px">
-                                                    <span class="m_322456910589396027m_768238685266715055price">S/{{ $pedido->precio }}</span>
+                                                    <span class="m_322456910589396027m_768238685266715055price">S/{{ $pedido->subtotal }}</span>
                                                 </td>
                                             </tr>
+                                            @if ($pedido->cupon_id)
+                                                <tr class="m_322456910589396027m_768238685266715055subtotal">
+                                                    <td colspan="4" align="right" style="padding:3px 9px">Descuento</td>
+                                                    <td align="right" style="padding:3px 9px">
+                                                        <span class="m_322456910589396027m_768238685266715055price">S/{{ $pedido->descuento }}</span>
+                                                    </td>
+                                                </tr>
+                                            @endif
                                             <tr class="m_322456910589396027m_768238685266715055shipping">
                                                 <td colspan="4" align="right" style="padding:3px 9px">Costo de envío </td>
                                                 <td align="right" style="padding:3px 9px">
@@ -227,7 +235,7 @@
                                                 </td>
                                                 <td align="right" style="padding:3px 9px">
                                                     <strong>
-                                                        <span class="m_322456910589396027m_768238685266715055price">S/{{ $pedido->precio }}</span>
+                                                        <span class="m_322456910589396027m_768238685266715055price">S/{{ $pedido->subtotal - $pedido->descuento }}</span>
                                                     </strong>
                                                 </td>
                                             </tr>

@@ -103,7 +103,9 @@ class SuscripcionController extends Controller
                 $item['producto_nombre'] = $item->pedido_detalle->producto['nombre'];
                 $item['pedido tipo_de_pago'] = $item->pedido_detalle->pedido['tipo_de_pago'];
                 $item['pedido estado'] = $item->pedido_detalle->pedido['estado'];
-                $item['pedido precio'] = $item->pedido_detalle->pedido['precio'];
+                $item['pedido subtotal'] = $item->pedido_detalle->pedido['subtotal'];
+                $item['pedido descuento'] = $item->pedido_detalle->pedido['descuento'];
+                $item['pedido total'] = $item->pedido_detalle->pedido['total'];
                 $item['pedido currency_code'] = $item->pedido_detalle->pedido['currency_code'];
                 $item['cliente_first_name'] = $item->pedido_detalle->pedido->cliente['first_name'];
                 $item['cliente_last_name'] = $item->pedido_detalle->pedido->cliente['last_name'];

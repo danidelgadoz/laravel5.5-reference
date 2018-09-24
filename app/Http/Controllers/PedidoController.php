@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Cupon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use App\Pedido;
@@ -18,6 +19,7 @@ use App\Mail\GiftcardMailing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Log;
+use Carbon\Carbon;
 
 class PedidoController extends Controller
 {
@@ -42,7 +44,22 @@ class PedidoController extends Controller
      */
     public function store(Request $request)
     {
-        $pedido = DB::transaction(function () use ($request) {
+        $cupon_valido = null;
+
+        if ($request->cupon) {
+            $cupon_valido = Cupon::where('codigo', $request->cupon)
+                ->whereRaw('cantidad_canjeados < cantidad_disponible')
+                ->where('habilitado', true)
+                ->where('fecha_inicio', '<', Carbon::now())
+                ->where('fecha_fin', '>', Carbon::now())
+                ->first();
+
+            if (!$cupon_valido) {
+                return response(['message' => "Cupon inválido"], 409);
+            }
+        }
+
+        $pedido = DB::transaction(function () use ($request, $cupon_valido) {
             $cliente = Cliente::where('email', $request->cliente['email'])->first();
 
             if (!$cliente) {
@@ -77,17 +94,22 @@ class PedidoController extends Controller
                 $factura->save();
             }
 
+            $porcentaje_descuento = $cupon_valido ? $cupon_valido->descuento : 0;
+
             $pedido = new Pedido();
             $pedido->tipo_de_pago = $request->tipo_de_pago;
             $pedido->estado = ($request->tipo_de_pago === 'TARJETA') ? 'PROCESANDO' : 'PENDIENTE';
-            $pedido->precio = 0;
+            $pedido->subtotal = 0;
+            $pedido->descuento = 0;
             $pedido->cliente_id = $cliente->id;
-            $pedido->cupon_id = $request->cupon_id;
+            $pedido->cupon_id = $cupon_valido ? $cupon_valido->id : null;
             $pedido->factura_id = $request->factura ? $factura->id : null;
             foreach ($request->pedido_detalle as $pd) {
                 $producto = Producto::find($pd['producto_id']);
-                $pedido->precio = $pedido->precio + ($producto['precio'] * $pd['cantidad']);
+                $pedido->subtotal = $pedido->subtotal + ($producto['precio'] * $pd['cantidad']);
             }
+            $pedido->descuento = $pedido->subtotal * $porcentaje_descuento;
+            $pedido->total = $pedido->subtotal - $pedido->descuento;
             $pedido->save();
 
             $envio = new Envio();
