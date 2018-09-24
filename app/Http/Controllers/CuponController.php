@@ -28,11 +28,13 @@ class CuponController extends Controller
     {
         $cupon = new Cupon;
         $cupon->codigo = $request->codigo;
+        $cupon->descripcion = $request->descripcion;
         $cupon->habilitado = $request->habilitado;
         $cupon->cantidad_disponible = $request->cantidad_disponible;
+        $cupon->cantidad_canjeados = 0;
         $cupon->fecha_inicio = $request->fecha_inicio;
         $cupon->fecha_fin = $request->fecha_fin;
-        $cupon->plan_id = $request->plan_id;
+        $cupon->descuento = $request->descuento;
         $cupon->save();
 
         return response($cupon, 201);
@@ -58,6 +60,7 @@ class CuponController extends Controller
      */
     public function update(Request $request, Cupon $cupon)
     {
+        $cupon->descripcion = $request->descripcion;
         $cupon->habilitado = $request->habilitado;
         $cupon->cantidad_disponible = $request->cantidad_disponible;
         $cupon->fecha_inicio = $request->fecha_inicio;
