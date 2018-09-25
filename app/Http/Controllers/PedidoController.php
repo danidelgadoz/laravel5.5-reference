@@ -343,6 +343,12 @@ class PedidoController extends Controller
                     $pedido->estado = 'CONFIRMADA';
                     $pedido->save();
 
+                    if ($pedido->cupon_id) {
+                        $cupon_usado = Cupon::find($pedido->cupon_id);
+                        $cupon_usado->cantidad_canjeados = $cupon_usado->cantidad_canjeados + 1;
+                        $cupon_usado->save();
+                    }
+
                     foreach ($pedido->detalles as $pd) {
                         if ($pd['is_giftcard'])
                         {
