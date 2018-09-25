@@ -66,10 +66,16 @@ Route::get('producto', 'ProductoController@index');
 Route::post('reclamacion', 'ReclamacionController@store');
 Route::get('suscripcion/export/excel', 'SuscripcionController@export');
 
+Route::get('changePassword', function () {
+    return response(Hash::make('Craftimes@Admin'));
+});
 
 Route::get('env', function () {
     $env = [
         'MAIL_HOST' => env('MAIL_HOST'),
+        'MAIL_PORT' => env('MAIL_PORT'),
+        'MAIL_USERNAME' => env('MAIL_USERNAME'),
+        'MAIL_PASSWORD' => env('MAIL_PASSWORD'),
         'CRAFTIMES_EMAIL_CONTACTO' => env('CRAFTIMES_EMAIL_CONTACTO'),
         'CRAFTIMES_EMAIL_CC_PEDIDO' => env('CRAFTIMES_EMAIL_CC_PEDIDO')
     ];

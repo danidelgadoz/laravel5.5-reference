@@ -19,7 +19,6 @@ use App\Mail\GiftcardMailing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use Log;
-use Carbon\Carbon;
 
 class PedidoController extends Controller
 {
@@ -50,8 +49,6 @@ class PedidoController extends Controller
             $cupon_valido = Cupon::where('codigo', $request->cupon)
                 ->whereRaw('cantidad_canjeados < cantidad_disponible')
                 ->where('habilitado', true)
-                ->where('fecha_inicio', '<', Carbon::now())
-                ->where('fecha_fin', '>', Carbon::now())
                 ->first();
 
             if (!$cupon_valido) {

@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use App\Cupon;
 use Illuminate\Http\Request;
-use Carbon\Carbon;
 
 class CuponController extends Controller
 {
@@ -33,8 +32,6 @@ class CuponController extends Controller
         $cupon->habilitado = $request->habilitado;
         $cupon->cantidad_disponible = $request->cantidad_disponible;
         $cupon->cantidad_canjeados = 0;
-        $cupon->fecha_inicio = $request->fecha_inicio;
-        $cupon->fecha_fin = $request->fecha_fin;
         $cupon->descuento = $request->descuento;
         $cupon->save();
 
@@ -64,8 +61,6 @@ class CuponController extends Controller
         $cupon->descripcion = $request->descripcion;
         $cupon->habilitado = $request->habilitado;
         $cupon->cantidad_disponible = $request->cantidad_disponible;
-        $cupon->fecha_inicio = $request->fecha_inicio;
-        $cupon->fecha_fin = $request->fecha_fin;
         $cupon->save();
         return response($cupon, 200);
     }
@@ -91,8 +86,6 @@ class CuponController extends Controller
         $cupon_valido = Cupon::where('codigo', $request->codigo)
             ->whereRaw('cantidad_canjeados < cantidad_disponible')
             ->where('habilitado', true)
-            ->where('fecha_inicio', '<', Carbon::now())
-            ->where('fecha_fin', '>', Carbon::now())
             ->first();
 
         if (!$cupon_valido) {
