@@ -123,6 +123,8 @@ class GiftcardController extends Controller
             $suscripcion->nombres = $request->envio['remitente_nombres'];
             $suscripcion->email = $request->envio['remitente_email'];
             $suscripcion->celular = $request->envio['remitente_telefono'];
+            $suscripcion->tipo_documento = $request->envio['remitente_tipo_documento'];
+            $suscripcion->numero_documento = $request->envio['remitente_numero_documento'];
             $suscripcion->pedido_detalle_id = $pedido_detalle->id;
             $suscripcion->save();
 
