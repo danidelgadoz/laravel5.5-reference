@@ -117,11 +117,11 @@ class PedidoController extends Controller
             $envio->remitente_nombres = $request->envio['remitente_nombres'];
             $envio->remitente_email = $request->envio['remitente_email'];
             $envio->remitente_telefono = $request->envio['remitente_telefono'];
+            $envio->remitente_tipo_documento = $request->envio['remitente_tipo_documento'];
+            $envio->remitente_numero_documento = $request->envio['remitente_numero_documento'];
             $envio->entrega_direccion = $request->envio['direccion'];
             $envio->entrega_distrito = $request->envio['distrito'];
             $envio->entrega_referencia = $request->envio['referencia'];
-            $envio->entrega_tipo_documento = $request->envio['tipo_documento'];
-            $envio->entrega_numero_documento = $request->envio['numero_documento'];
             $envio->pedido_id = $pedido->id;
             $envio->save();
 
@@ -233,11 +233,11 @@ class PedidoController extends Controller
                     $giftcard->remitente_nombres = $envio->remitente_nombres;
                     $giftcard->remitente_email = $envio->remitente_email;
                     $giftcard->remitente_telefono = $envio->remitente_telefono;
+                    $giftcard->remitente_tipo_documento = $envio->remitente_tipo_documento;
+                    $giftcard->remitente_numero_documento = $envio->remitente_numero_documento;
                     $giftcard->entrega_direccion = $envio->entrega_direccion;
                     $giftcard->entrega_distrito = $envio->entrega_distrito;
                     $giftcard->entrega_referencia = $envio->entrega_referencia;
-                    $giftcard->entrega_tipo_documento = $envio->entrega_tipo_documento;
-                    $giftcard->entrega_numero_documento = $envio->entrega_numero_documento;
                     $giftcard->pedido_detalle_id = $pd->id;
                     $giftcard->save();
 
@@ -252,11 +252,11 @@ class PedidoController extends Controller
                     $suscripcion->nombres = $envio->remitente_nombres;
                     $suscripcion->email = $envio->remitente_email;
                     $suscripcion->celular = $envio->remitente_telefono;
+                    $suscripcion->tipo_documento = $envio->remitente_tipo_documento;
+                    $suscripcion->numero_documento = $envio->remitente_numero_documento;
                     $suscripcion->direccion = $envio->entrega_direccion;
                     $suscripcion->distrito = $envio->entrega_distrito;
                     $suscripcion->referencia = $envio->entrega_referencia;
-                    $suscripcion->tipo_documento = $envio->entrega_tipo_documento;
-                    $suscripcion->numero_documento = $envio->entrega_numero_documento;
                     $suscripcion->pedido_detalle_id = $pd->id;
                     $suscripcion->save();
                 }
@@ -370,11 +370,11 @@ class PedidoController extends Controller
                             $giftcard->remitente_nombres = $pedido->envio['remitente_nombres'];
                             $giftcard->remitente_email = $pedido->envio['remitente_email'];
                             $giftcard->remitente_telefono = $pedido->envio['remitente_telefono'];
+                            $giftcard->remitente_tipo_documento = $pedido->envio['remitente_tipo_documento'];
+                            $giftcard->remitente_numero_documento = $pedido->envio['remitente_numero_documento'];
                             $giftcard->entrega_direccion = $pedido->envio['entrega_direccion'];
                             $giftcard->entrega_distrito = $pedido->envio['entrega_distrito'];
                             $giftcard->entrega_referencia = $pedido->envio['entrega_referencia'];
-                            $giftcard->entrega_tipo_documento = $pedido->envio['entrega_tipo_documento'];
-                            $giftcard->entrega_numero_documento = $pedido->envio['entrega_numero_documento'];
                             $giftcard->pedido_detalle_id = $pd->id;
                             $giftcard->save();
 
@@ -390,11 +390,11 @@ class PedidoController extends Controller
                             $suscripcion->nombres = $pedido->envio['remitente_nombres'];
                             $suscripcion->email = $pedido->envio['remitente_email'];
                             $suscripcion->celular = $pedido->envio['remitente_telefono'];
+                            $suscripcion->tipo_documento = $pedido->envio['remitente_tipo_documento'];
+                            $suscripcion->numero_documento = $pedido->envio['remitente_numero_documento'];
                             $suscripcion->direccion = $pedido->envio['entrega_direccion'];
                             $suscripcion->distrito = $pedido->envio['entrega_distrito'];
                             $suscripcion->referencia = $pedido->envio['entrega_referencia'];
-                            $suscripcion->tipo_documento = $pedido->envio['entrega_tipo_documento'];
-                            $suscripcion->numero_documento = $pedido->envio['entrega_numero_documento'];
                             $suscripcion->pedido_detalle_id = $pd->id;
                             $suscripcion->save();
                         }
