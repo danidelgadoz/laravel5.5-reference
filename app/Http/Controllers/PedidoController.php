@@ -69,6 +69,8 @@ class PedidoController extends Controller
                 $cliente->address_city = $request->cliente['address_city'];
                 $cliente->country_code = $request->cliente['country_code'];
                 $cliente->phone_number = $request->cliente['phone_number'];
+                $cliente->tipo_documento = $request->cliente['tipo_documento'];
+                $cliente->numero_documento = $request->cliente['numero_documento'];
                 $cliente->save();
             } else {
                 $cliente->card_number = null;
@@ -78,6 +80,8 @@ class PedidoController extends Controller
                 $cliente->address_city = $request->cliente['address_city'];
                 $cliente->country_code = $request->cliente['country_code'];
                 $cliente->phone_number = $request->cliente['phone_number'];
+                $cliente->tipo_documento = $request->cliente['tipo_documento'];
+                $cliente->numero_documento = $request->cliente['numero_documento'];
                 $cliente->save();
             }
 
@@ -116,6 +120,8 @@ class PedidoController extends Controller
             $envio->entrega_direccion = $request->envio['direccion'];
             $envio->entrega_distrito = $request->envio['distrito'];
             $envio->entrega_referencia = $request->envio['referencia'];
+            $envio->entrega_tipo_documento = $request->envio['tipo_documento'];
+            $envio->entrega_numero_documento = $request->envio['numero_documento'];
             $envio->pedido_id = $pedido->id;
             $envio->save();
 
@@ -230,6 +236,8 @@ class PedidoController extends Controller
                     $giftcard->entrega_direccion = $envio->entrega_direccion;
                     $giftcard->entrega_distrito = $envio->entrega_distrito;
                     $giftcard->entrega_referencia = $envio->entrega_referencia;
+                    $giftcard->entrega_tipo_documento = $envio->entrega_tipo_documento;
+                    $giftcard->entrega_numero_documento = $envio->entrega_numero_documento;
                     $giftcard->pedido_detalle_id = $pd->id;
                     $giftcard->save();
 
@@ -247,6 +255,8 @@ class PedidoController extends Controller
                     $suscripcion->direccion = $envio->entrega_direccion;
                     $suscripcion->distrito = $envio->entrega_distrito;
                     $suscripcion->referencia = $envio->entrega_referencia;
+                    $suscripcion->tipo_documento = $envio->entrega_tipo_documento;
+                    $suscripcion->numero_documento = $envio->entrega_numero_documento;
                     $suscripcion->pedido_detalle_id = $pd->id;
                     $suscripcion->save();
                 }
@@ -363,6 +373,8 @@ class PedidoController extends Controller
                             $giftcard->entrega_direccion = $pedido->envio['entrega_direccion'];
                             $giftcard->entrega_distrito = $pedido->envio['entrega_distrito'];
                             $giftcard->entrega_referencia = $pedido->envio['entrega_referencia'];
+                            $giftcard->entrega_tipo_documento = $pedido->envio['entrega_tipo_documento'];
+                            $giftcard->entrega_numero_documento = $pedido->envio['entrega_numero_documento'];
                             $giftcard->pedido_detalle_id = $pd->id;
                             $giftcard->save();
 
@@ -381,6 +393,8 @@ class PedidoController extends Controller
                             $suscripcion->direccion = $pedido->envio['entrega_direccion'];
                             $suscripcion->distrito = $pedido->envio['entrega_distrito'];
                             $suscripcion->referencia = $pedido->envio['entrega_referencia'];
+                            $suscripcion->tipo_documento = $pedido->envio['entrega_tipo_documento'];
+                            $suscripcion->numero_documento = $pedido->envio['entrega_numero_documento'];
                             $suscripcion->pedido_detalle_id = $pd->id;
                             $suscripcion->save();
                         }

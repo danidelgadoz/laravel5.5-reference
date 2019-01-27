@@ -26,7 +26,9 @@ class Pedido extends Model
                 'address',
                 'address_city',
                 'country_code',
-                'phone_number'
+                'phone_number',
+                'tipo_documento',
+                'numero_documento'
             ]);
     }
 
