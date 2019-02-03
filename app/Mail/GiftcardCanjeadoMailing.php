@@ -32,7 +32,7 @@ class GiftcardCanjeadoMailing extends Mailable
      */
     public function build()
     {
-        $subject = "Craftimes: Gitcard canjeado";
+        $subject = "Craftimes: Giftcard canjeado";
 
         return $this->from('contacto@craftimes.com', 'Craftimes')
                     ->to($this->pedido->cliente['email'])
