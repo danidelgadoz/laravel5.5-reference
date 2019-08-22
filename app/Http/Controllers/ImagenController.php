@@ -4,9 +4,12 @@ namespace App\Http\Controllers;
 
 use App\Imagen;
 use Illuminate\Http\Request;
+use Storage;
 
 class ImagenController extends Controller
 {
+    public $storagePath = 'public/img/imagenes';
+
     /**
      * Display a listing of the resource.
      *
@@ -36,8 +39,10 @@ class ImagenController extends Controller
      */
     public function store(Request $request)
     {
+        $image_path = $this->uploadOneFile($request, 'imagen');
+
         $imagen = new Imagen;
-        $imagen->link = "test";
+        $imagen->link = $image_path;
         $imagen->save();
 
         return response($imagen, 201);
@@ -86,5 +91,15 @@ class ImagenController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    private function uploadOneFile(Request $request, $field)
+    {
+        if($request->hasFile($field))
+        {
+            $path = $request->file($field)->store($this->storagePath);
+            return url(Storage::url($path));
+        }
+        return null;
     }
 }
