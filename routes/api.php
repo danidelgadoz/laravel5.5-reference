@@ -44,6 +44,7 @@ Route::prefix('')->middleware('auth:api')->group(function () {
     Route::apiResource('suscripcion', 'SuscripcionController');
 });
 
+Route::apiResource('imagen', 'ImagenController');
 Route::get('beneficio', 'BeneficioController@index');
 Route::get('beneficio/{beneficio}', 'BeneficioController@show');
 Route::get('beneficio/{beneficio}/relacionadas', 'BeneficioController@getRelated');
