@@ -61,6 +61,7 @@ class CuponController extends Controller
         $cupon->descripcion = $request->descripcion;
         $cupon->habilitado = $request->habilitado;
         $cupon->cantidad_disponible = $request->cantidad_disponible;
+        $cupon->descuento = $request->descuento;
         $cupon->save();
         return response($cupon, 200);
     }
